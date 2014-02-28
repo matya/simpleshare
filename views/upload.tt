@@ -1,0 +1,15 @@
+<div id="upload">
+    <form action="<% upload_file %>" method="post" enctype="multipart/form-data">
+<!--        <label for="file">Filename:</label> -->
+     <p>
+        <input type="file" name="file" id="file" multiple="">
+     <p>
+        <input type="submit" name="submit" value="Submit">
+    
+<!--
+        <button type="submit" class="btn">
+            Upload
+        </button>
+-->
+    <form>
+</div>
