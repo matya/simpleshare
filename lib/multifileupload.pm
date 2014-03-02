@@ -43,15 +43,13 @@ post '/upload' => sub {
     }
 };
 
-
 get '/download/:file' => sub {
     my $file = params->{file};
-    debug "FILE";
-    debug Dumper ($file);
+    debug "FILE = $file\n";
     my $path = $upload_dir . '/' . $file;
     return send_file($path, system_path => 1 ) if -e $path;
+    return redirect '/';
 };
-
 
 sub process_request {
     my ($ref) = @_;
