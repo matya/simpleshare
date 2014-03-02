@@ -1,6 +1,6 @@
 package multifileupload;
 use Dancer ':syntax';
-use Data::Dumper;
+#use Data::Dumper;
 
 our $VERSION = '0.1';
 
@@ -19,8 +19,8 @@ get '/' => sub {
 
 post '/upload' => sub {
     my $file = request->upload('file');
-    my @files;
     if ($file) {
+    my @files;
         if ( ref $file eq 'ARRAY' ) {
             foreach my $fkey (keys (@$file)) {
                 my $filename = process_request(@$file[$fkey]);
@@ -45,12 +45,10 @@ post '/upload' => sub {
 
 
 get '/download/:file' => sub {
-#    my $file = params->{file};
     my $file = params->{file};
     debug "FILE";
     debug Dumper ($file);
     my $path = $upload_dir . '/' . $file;
-#   return send_file( params->{file}, system_path => 1 );
     return send_file($path, system_path => 1 ) if -e $path;
 };
 
@@ -59,8 +57,6 @@ sub process_request {
     my ($ref) = @_;
     my $fname = $ref->filename;
     my $tmpname = $ref->tempname;
-    debug "REF:";
-    debug Dumper ($ref);
     my $destination = $upload_dir .'/'. $fname;
     $ref->copy_to($destination);
     unlink $tmpname if -e $tmpname;
