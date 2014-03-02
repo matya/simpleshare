@@ -19,27 +19,21 @@ get '/' => sub {
 
 post '/upload' => sub {
     my $file = request->upload('file');
-    debug "FILE:";
-    debug Dumper($file);
+    my @files;
     if ($file) {
         if ( ref $file eq 'ARRAY' ) {
             foreach my $fkey (keys (@$file)) {
-                my $fname = @$file[$fkey]->filename;
-                my $tmpname = @$file[$fkey]->tempname;
-                my $destination = $upload_dir .'/'. $fname;
-                @$file[$fkey]->copy_to($destination);
-                unlink $tmpname if -e $tmpname;
+                my $filename = process_request(@$file[$fkey]);
+                push (@files,$filename);
             }
         }
         else {
-            my $fname = $file->filename;
-            my $tmpname = $file->tempname;
-            my $destination = $upload_dir . '/' . $fname;
-            $file->copy_to($destination);
-            unlink $tmpname if -e $tmpname;
+            my $filename = process_request($file);
+            push (@files,$filename);
         }
         template 'upload' => {
-            msg => 'Done',
+            msg => 'Doone',
+            files => \@files,
         };
     } 
     else {
@@ -48,5 +42,29 @@ post '/upload' => sub {
         };
     }
 };
+
+
+get '/download/:file' => sub {
+#    my $file = params->{file};
+    my $file = params->{file};
+    debug "FILE";
+    debug Dumper ($file);
+    my $path = $upload_dir . '/' . $file;
+#   return send_file( params->{file}, system_path => 1 );
+    return send_file($path, system_path => 1 ) if -e $path;
+};
+
+
+sub process_request {
+    my ($ref) = @_;
+    my $fname = $ref->filename;
+    my $tmpname = $ref->tempname;
+    debug "REF:";
+    debug Dumper ($ref);
+    my $destination = $upload_dir .'/'. $fname;
+    $ref->copy_to($destination);
+    unlink $tmpname if -e $tmpname;
+    return $fname;
+}
 
 true;

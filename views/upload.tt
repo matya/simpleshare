@@ -5,8 +5,19 @@
      </p>
         <input type="submit" name="submit" value="Submit">
     <form>
+    <div id="page">
     <p>
+    
     <% IF msg %>  
+        <% msg %>
     <% END %>
     </p>
+    </div>
+    <div id="content">
+    <% IF files.size %>
+        <% FOREACH file IN files.sort %>
+         <a href="download/<% file %>"> <% file %> </a> <br>
+        <% END %>
+    <% END %>
+    </div>
 </div>
