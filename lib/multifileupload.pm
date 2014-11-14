@@ -4,8 +4,8 @@ use Dancer ':syntax';
 
 our $VERSION = '0.1';
 
-my $upload_route = '/upload';
-my $upload_dir = '/tmp';
+#my $upload_route = '/upload';
+my $upload_dir = setting('upload_basedir');
 
 
 hook before_template=> sub {

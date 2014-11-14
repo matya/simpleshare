@@ -5,6 +5,9 @@
 # Your application's name
 appname: "multifileupload"
 
+#directory in app root
+upload_basedir: 'upload'
+
 # The default layout to use for your application (located in
 # views/layouts/main.tt)
 layout: "main"
