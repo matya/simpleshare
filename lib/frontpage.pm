@@ -24,14 +24,9 @@ my ($success, $realm) = authenticate_user(
         params->{username}, params->{password}
     );
     my $user = params->{username};
-#    debug "USER = $user";
-#    debug "successs=$success\n";
-#    debug "Realm = $realm";
     if ($success) {
         session logged_in_user => params->{username};
         session logged_in_user_realm => $realm;
-#        debug "REALM\n";
-#        debug "REALM = $realm\n";
         my $users= session('logged_in_user');
         debug "$users\n";
 #        my $redir = params->{return_url};
