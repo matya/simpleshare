@@ -1,5 +1,5 @@
 MANIFEST
-lib/multifileupload.pm
+lib/upload.pm
 environments/development.yml
 environments/production.yml
 views/layouts/main.tt

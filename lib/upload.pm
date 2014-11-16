@@ -1,4 +1,4 @@
-package multifileupload;
+package upload;
 use Dancer ':syntax';
 use shared;
 #use Data::Dumper;
