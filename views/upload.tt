@@ -1,8 +1,10 @@
 <div id="upload">
     <form action="<% upload_route %>" method="post" enctype="multipart/form-data">
-     <p>
-        <input type="file" name="file" id="file" multiple="">
-        <input type="submit" name="submit" value="upload">
+     <ul class="nav">
+        <li><input type="file" name="file" id="file" multiple=""></li>
+        <li><input type="submit" name="submit" value="upload"></li>
+        <li class="logout"> <a href="<% logout_url %>"> Logout </a></li>
+    </ul>
     <form>
     <div id="page">
     <p>

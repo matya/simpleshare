@@ -1,6 +1,5 @@
 package upload;
 use Dancer ':syntax';
-use shared;
 #use Data::Dumper;
 use Sort::Naturally;
 
@@ -11,6 +10,7 @@ my $user = session('logged_in_user');
 
 post '/upload' => sub {
     my $file = request->upload('file');
+    my $user = session('logged_in_user');
     if ($file) {
     my @files;
         if ( ref $file eq 'ARRAY' ) {
@@ -21,7 +21,6 @@ post '/upload' => sub {
         else {
             my $filename = process_request($file);
         }
-        my $user = session('logged_in_user');
         template 'upload' => {
             msg => 'Doone',
             files => shared::listfiles("$user"),
@@ -30,6 +29,7 @@ post '/upload' => sub {
     else {
         template 'upload' => {
             msg => 'please select a file',
+            files => shared::listfiles("$user"),
         };
     }
 };
@@ -57,7 +57,6 @@ sub process_request {
     my $tmpname = $ref->tempname;
     my $upload_dir = "$shared::upload_dir".'/'."$user";
     my $destination = $upload_dir .'/'. $fname;
-    debug "Destination $destination\n";
     $ref->copy_to($destination);
     unlink $tmpname if -e $tmpname;
     return $fname;

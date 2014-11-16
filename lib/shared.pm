@@ -5,7 +5,7 @@ our $upload_dir = setting('upload_basedir');
 
 sub listfiles {
     my ($user)  = @_;
-    my @nofile = 'empty';
+    my @nofile = '../upload';
     my $path = "$upload_dir".'/'."$user";
     exit if ($user =~ m/\.\./);
     opendir(my $u_fd,$path) or die "can't open $path, $!\n";
@@ -21,12 +21,14 @@ sub listfiles {
 
 sub createuser {
     my ($user) = @_;
-    my $path = "$upload_dir".'/'."$user";
-    if ( ($user =~ /[\w\d]*/) && ( ! -d $path ) ) {
-        mkdir $path;
+    if  ($user =~ /[\w\d]*/) {
+        my $path = "$upload_dir".'/'."$user";
+        if ( ! -d $path ) {
+            mkdir $path;
+        }
     }
     else {
         debug "user contains wrong characters\n";
-        exit;
+        return false;
     }
 }

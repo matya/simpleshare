@@ -304,3 +304,15 @@ label {
 }
 
 
+.ul.nav {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+.ul.nav a {
+    display: block;
+    width: 8em;
+}
+.nav li {display: inline;}
+
+.logout {float: right;}

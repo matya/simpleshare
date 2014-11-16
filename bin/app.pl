@@ -4,14 +4,14 @@ use frontpage;
 use upload;
 use shared;
 
+#protect all routes by default
 hook 'before' => sub {
         if  ( ! session('logged_in_user')) {
             # Pass the original path requested along to the handler:
-#            var requested_path => request->path_info;
+            var requested_path => request->path_info;
             request->path_info('/login');
         }
 };
-
 
 hook before_template => sub {
     my $tokens = shift;
@@ -24,6 +24,5 @@ any '/logout' => sub {
     session -> destroy;
     return redirect '/login';
 };
-
 
 dance;
