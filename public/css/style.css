@@ -299,10 +299,10 @@ label {
 #filelist {
     text-align: center;
 }
-#filelist p {
+
+#file {
     color: green;
 }
-
 
 .ul.nav {
     list-style-type: none;
@@ -313,6 +313,18 @@ label {
     display: block;
     width: 8em;
 }
-.nav li {display: inline;}
+/*.nav li {display: inline;}*/
 
 .logout {float: right;}
+
+.logout a {
+    border: solid 1px #000;
+    background-color: #133;
+}
+
+#submit{
+    padding:5px;
+    border: solid 1px #000;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
