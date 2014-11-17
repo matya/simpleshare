@@ -1,21 +1,30 @@
 <div id="upload">
     <form action="<% upload_route %>" method="post" enctype="multipart/form-data">
-     <ul class="nav">
-        <li class="logout"> <a href="<% logout_url %>"> Logout </a></li>
-        <li><input type="file" name="file" id="file" multiple=""></li>
-        <li><input type="submit" name="submit" value="upload" id="submit"></li>
-    <% IF msg %>  
-        <% msg %> 
-    <% END %>
-    </ul>
-    <form>
-    </div>
-    <div id="page">
+         <ul class="nav">
+            <li class="logout"> <a href="<% logout_url %>"> Logout </a></li>
+            <li><input type="file" name="file" id="file" multiple=""></li>
+            <li><input type="submit" name="submit" value="upload" id="submit"></li>
+            <% IF msg %>  
+                <% msg %> 
+            <% END %>
+        </ul>
+    </form>
+</div>
+<div id="page">
     <div id="filelist">
-    <% IF files.size %>
-        <% FOREACH file IN files.sort %>
-         <a href="download/<% file %>"> <% file %> </a> <br>
+        <form action="<% action_url %> method="post">
+        <% IF files.size %>
+            <table class=upload_t>
+            <tr>
+            <% FOREACH file IN files.sort %>
+                 <td><a href="download/<% file %>"> <% file %> </a></td>
+                 <td><input name="fileaction" type="checkbox" value=<% file %>></td><tr>
+            <% END %>
+            </table>
         <% END %>
-    <% END %>
+        <input type="submit" name="share" value="share" id="share">
+        <input type="submit" name="unshare" value="unshare" id="unshare">
+        <input type="submit" name="delete" value="delete" id="delete">
+        </form>
     </div>
 </div>
