@@ -1,6 +1,6 @@
 package upload;
 use Dancer ':syntax';
-#use Data::Dumper;
+use Data::Dumper;
 use Sort::Naturally;
 
 our $VERSION = '0.1';
@@ -9,29 +9,42 @@ my $user = session('logged_in_user');
 
 
 post '/upload' => sub {
-    my $file = request->upload('file');
-    my $user = session('logged_in_user');
-    if ($file) {
-    my @files;
-        if ( ref $file eq 'ARRAY' ) {
-            foreach my $fkey (keys (@$file)) {
-                my $filename = process_request(@$file[$fkey]);
+    my $req = request->params;
+    debug "REQUEST\n";
+    debug Dumper($req) ;
+    if ( (defined $req->{'submit'}) && ($req->{'submit'} eq 'upload')) {
+        my $file = request->upload('file');                        
+        my $user = session('logged_in_user');
+        if ($file) {
+        my @files;
+            if ( ref $file eq 'ARRAY' ) {
+                foreach my $fkey (keys (@$file)) {
+                    my $filename = process_request(@$file[$fkey]);
+                }
             }
-        }
+            else {
+                my $filename = process_request($file);
+            }
+            template 'upload' => {
+                msg => 'Doone',
+                files => shared::listfiles("$user"),
+            };
+        } 
         else {
-            my $filename = process_request($file);
+            template 'upload' => {
+                msg => 'please select a file',
+                files => shared::listfiles("$user"),
+            };
         }
-        template 'upload' => {
-            msg => 'Doone',
-            files => shared::listfiles("$user"),
-        };
-    } 
-    else {
-        template 'upload' => {
-            msg => 'please select a file',
-            files => shared::listfiles("$user"),
-        };
     }
+    elsif ( $req->{'action'} ) {
+        if ($req->{'action'} eq 'share') {
+            my $file = $req->{'fileaction'};
+            debug "Share file = $file\n"; 
+            debug Dumper($file);
+        }
+    }
+    
 };
 
 get '/upload' => sub {

@@ -12,7 +12,7 @@
 </div>
 <div id="page">
     <div id="filelist">
-        <form action="<% action_url %> method="post">
+        <form action="<% action_url %>" method="post">
         <% IF files.size %>
             <table class=upload_t>
             <tr>
@@ -22,9 +22,9 @@
             <% END %>
             </table>
         <% END %>
-        <input type="submit" name="share" value="share" id="share">
-        <input type="submit" name="unshare" value="unshare" id="unshare">
-        <input type="submit" name="delete" value="delete" id="delete">
+        <input type="submit" name="action" value="share" id="share">
+        <input type="submit" name="action" value="unshare" id="unshare">
+        <input type="submit" name="action" value="delete" id="delete">
         </form>
     </div>
 </div>
