@@ -18,7 +18,7 @@
             <tr>
             <% FOREACH file IN files.sort %>
                  <td><a href="download/<% file %>"> <% file %> </a></td>
-                 <td><input name="fileaction" type="checkbox" value=<% file %>></td><tr>
+                 <td><input name="filelist" type="checkbox" value=<% file %>></td><tr>
             <% END %>
             </table>
         <% END %>

@@ -8,7 +8,7 @@ use shared;
 hook 'before' => sub {
         if  ( ! session('logged_in_user')) {
             # Pass the original path requested along to the handler:
-            var requested_path => request->path_info;
+            # var requested_path => request->path_info;
             request->path_info('/login');
         }
 };

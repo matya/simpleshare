@@ -3,12 +3,11 @@ use Dancer ':syntax';
 use Data::Dumper;
 use Sort::Naturally;
 
+
 our $VERSION = '0.1';
 
-my $user = session('logged_in_user');
-
-
 post '/upload' => sub {
+    my $user = session('logged_in_user');
     my $req = request->params;
     debug "REQUEST\n";
     debug Dumper($req) ;
@@ -39,9 +38,18 @@ post '/upload' => sub {
     }
     elsif ( $req->{'action'} ) {
         if ($req->{'action'} eq 'share') {
-            my $file = $req->{'fileaction'};
-            debug "Share file = $file\n"; 
-            debug Dumper($file);
+            if ($ req->{'filelist'} ) {
+                my $file = $req->{'filelist'};
+                debug "Share file = $file\n"; 
+                print "file has to be linked\n";
+                debug Dumper($file);
+            }
+            else {
+                template 'upload' => {
+                    msg => 'please select a file to share',
+                    files => shared::listfiles("$user"),
+                };
+            }
         }
     }
     
