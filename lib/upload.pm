@@ -43,6 +43,7 @@ post '/upload' => sub {
                 debug "Share file = $file\n"; 
                 print "file has to be linked\n";
                 debug Dumper($file);
+                shared::share($file);
             }
             else {
                 template 'upload' => {
