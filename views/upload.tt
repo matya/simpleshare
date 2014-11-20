@@ -1,13 +1,15 @@
 <div id="upload">
     <form action="<% upload_route %>" method="post" enctype="multipart/form-data">
-         <ul class="nav">
             <li class="logout"> <a href="<% logout_url %>"> Logout </a></li>
+         <ul class="nav">
             <li><input type="file" name="file" id="file" multiple=""></li>
             <li><input type="submit" name="submit" value="upload" id="submit"></li>
+            <li> <a href="<% shared_url %>"> Shared</a></li>
             <% IF msg %>  
                 <% msg %> 
             <% END %>
-        </ul>
+         </ul>
+
     </form>
 </div>
 <div id="page">
@@ -20,7 +22,7 @@
             <tr>
             <% FOREACH file IN files.sort %>
                  <td><a href="download/<% file %>"> <% file %> </a></td>
-                 <td><input name="filelist" type="checkbox" value=<% file %>></td><tr>
+                 <td><input name="filelist" type="checkbox" value="<% file %>"></td><tr>
             <% END %>
             </table>
         <% END %>

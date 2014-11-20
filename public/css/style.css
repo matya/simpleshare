@@ -309,11 +309,22 @@ label {
     padding-left: 0;
     margin-left: 0;
 }
-.ul.nav a {
-    display: block;
-    width: 8em;
+
+/*.ul.nav a {
+    display: inline-block;
+    width: 33%;
+}*/
+.nav li {
+    display: inline-block;
+    width: 30%
 }
-/*.nav li {display: inline;}*/
+/*.ul.nav0 {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+.nav0 li {display: inline;}
+*/
 
 .logout {float: right;}
 

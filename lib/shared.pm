@@ -3,6 +3,7 @@ use Dancer ':syntax';
 use String::Random;
 
 our $upload_dir = setting('upload_basedir');
+our $share_dir= setting('share_basedir');
 
 sub listfiles {
     my ($user)  = @_;
@@ -24,9 +25,9 @@ sub createuser {
     my ($user) = @_;
     if  ($user =~ /[\w\d]*/) {
         my $path = "$upload_dir".'/'."$user";
-        if ( ! -d $path ) {
-            mkdir $path;
-        }
+        my $sharepath = "$share_dir".'/'."$user";
+        mkdir $path if  ! -d $path ;
+        mkdir $sharepath if ! -d $sharepath;
     }
     else {
         debug "user contains wrong characters\n";
@@ -36,12 +37,22 @@ sub createuser {
 
 sub share {
     my ($fileref) = @_;
+    my $rval;
     my $rndstring = String::Random->new;
     my $rstr = $rndstring->randpattern("CCccccn");
+    my $user = session('logged_in_user');
+    my $url = 'pub'.'/'."$user".'/'."$rstr";
 
     if ( ref $fileref eq 'ARRAY' ) {
         foreach my $fkey (keys (@$fileref)) {
-            mklink("@$fileref[$fkey]","$rstr");
+            debug "fkey = $fkey\n";
+            my $rval = mklink("@$fileref[$fkey]","$rstr");
+        }
+        if ($rval) {
+            return  $url;
+        }
+        else {
+            return false;
         }
     }
     else {
@@ -53,12 +64,14 @@ sub share {
 sub mklink {
     my ($file,$rnd) = @_;
     my $user = session('logged_in_user');
-    my $path = 'public/pub'.'/'."$user".'/'."$rnd";
+#    my $path = 'public/'."$url";
+    my $path = $share_dir.'/'."$user".'/'."$rnd";
     mkdir $path || debug "err $!\n";
     debug "PATH = $path\n";
     my $link = "$path".'/'."$file";
     my $dest = '../../../../upload'.'/'."$user".'/'."$file";
     debug "dest = $dest\n";
-    my $returnvalue =  symlink ("$dest","$link");
+    my $returnvalue =  symlink ("$dest","$link") || return false;
     debug "symlink ret val = $returnvalue\n";
+    return true;
 }

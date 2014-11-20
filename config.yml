@@ -10,6 +10,7 @@ appname: "fileshare"
 layout: "main"
 
 upload_basedir: 'upload'
+share_basedir: 'public/pub'
 
 # when the charset is set to UTF-8 Dancer will handle for you
 # all the magic of encoding and decoding. You should not care

@@ -8,7 +8,7 @@ our $VERSION = '0.1';
 
 post '/upload' => sub {
     my $user = session('logged_in_user');
-    my $req = request->params;
+    my $req = request->params();
     debug "REQUEST\n";
     debug Dumper($req) ;
     if ( (defined $req->{'submit'}) && ($req->{'submit'} eq 'upload')) {
@@ -43,7 +43,7 @@ post '/upload' => sub {
                 debug "Share file = $file\n"; 
                 print "file has to be linked\n";
                 debug Dumper($file);
-                shared::share($file);
+                shared::share("$file");
             }
             else {
                 template 'upload' => {
