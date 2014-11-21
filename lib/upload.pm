@@ -26,13 +26,13 @@ post '/upload' => sub {
             }
             template 'upload' => {
                 msg => 'Doone',
-                files => shared::listfiles("$user"),
+                files => subs::listfiles("$user"),
             };
         } 
         else {
             template 'upload' => {
                 msg => 'please select a file',
-                files => shared::listfiles("$user"),
+                files => subs::listfiles("$user"),
             };
         }
     }
@@ -43,12 +43,28 @@ post '/upload' => sub {
                 debug "Share file = $file\n"; 
                 print "file has to be linked\n";
                 debug Dumper($file);
-                shared::share("$file");
+                subs::share("$file");
+                template 'shared' => {
+                    msg => 'please select a file to share',
+                    files => subs::findshared("$user"),
+                };
+
             }
             else {
                 template 'upload' => {
                     msg => 'please select a file to share',
-                    files => shared::listfiles("$user"),
+                    files => subs::listfiles("$user"),
+                };
+            }
+        }
+        elsif ($req->{'action'} eq 'unshare') {
+            if ($ req->{'filelist'} ) {
+                debug 'Unshare\n';
+            }
+            else {
+                template 'upload' => {
+                    msg => 'please select a file to share',
+                    files => subs::listfiles("$user"),
                 };
             }
         }
@@ -59,14 +75,14 @@ post '/upload' => sub {
 get '/upload' => sub {
     my $user = session('logged_in_user');
     template 'upload' => {
-        files => shared::listfiles("$user"),
+        files => subs::listfiles("$user"),
     };
 };
 
 get '/download/:file' => sub {
     my $file = params->{file};
     my $user = session('logged_in_user');
-    my $upload_dir = $shared::upload_dir .'/'. $user;
+    my $upload_dir = $subs::upload_dir .'/'. $user;
     my $path = $upload_dir . '/' . $file;
     return send_file($path, system_path => 1 ) if -e $path;
     return redirect '/';
@@ -77,7 +93,7 @@ sub process_request {
     my $user = session('logged_in_user');
     my $fname = $ref->filename;
     my $tmpname = $ref->tempname;
-    my $upload_dir = "$shared::upload_dir".'/'."$user";
+    my $upload_dir = "$subs::upload_dir".'/'."$user";
     my $destination = $upload_dir .'/'. $fname;
     $ref->copy_to($destination);
     unlink $tmpname if -e $tmpname;

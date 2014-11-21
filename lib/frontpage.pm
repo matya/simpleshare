@@ -26,7 +26,7 @@ my ($success, $realm) = authenticate_user(
         session logged_in_user_realm => $realm;
         my $user = session('logged_in_user');
         debug "USER = $user\n";
-        shared::createuser($user);
+        subs::createuser($user);
         redirect params->{return_url} || "/upload";
     }
     else {  
