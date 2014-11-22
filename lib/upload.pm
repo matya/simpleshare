@@ -16,6 +16,8 @@ post '/upload' => sub {
         my $user = session('logged_in_user');
         if ($file) {
         my @files;
+            debug "reference or not ??\n";
+            debug Dumper ($file);
             if ( ref $file eq 'ARRAY' ) {
                 foreach my $fkey (keys (@$file)) {
                     my $filename = process_request(@$file[$fkey]);
@@ -26,13 +28,13 @@ post '/upload' => sub {
             }
             template 'upload' => {
                 msg => 'Doone',
-                files => subs::listfiles("$user"),
+                files => subs::listfiles($user),
             };
         } 
         else {
             template 'upload' => {
                 msg => 'please select a file',
-                files => subs::listfiles("$user"),
+                files => subs::listfiles($user),
             };
         }
     }
@@ -40,20 +42,19 @@ post '/upload' => sub {
         if ($req->{'action'} eq 'share') {
             if ($ req->{'filelist'} ) {
                 my $file = $req->{'filelist'};
-                debug "Share file = $file\n"; 
-                print "file has to be linked\n";
-                debug Dumper($file);
-                subs::share("$file");
-                template 'shared' => {
-                    msg => 'please select a file to share',
-                    files => subs::findshared("$user"),
-                };
+                # don't use \" for $file, or 
+                subs::share($file);
+                return redirect '/shared';
+#                template 'shared' => {
+#                    msg => 'please select a file to share',
+##                    files => subs::findshared($user),
+#                };
 
             }
             else {
                 template 'upload' => {
                     msg => 'please select a file to share',
-                    files => subs::listfiles("$user"),
+                    files => subs::listfiles($user),
                 };
             }
         }
@@ -64,7 +65,7 @@ post '/upload' => sub {
             else {
                 template 'upload' => {
                     msg => 'please select a file to share',
-                    files => subs::listfiles("$user"),
+                    files => subs::listfiles($user),
                 };
             }
         }
@@ -75,7 +76,7 @@ post '/upload' => sub {
 get '/upload' => sub {
     my $user = session('logged_in_user');
     template 'upload' => {
-        files => subs::listfiles("$user"),
+        files => subs::listfiles($user),
     };
 };
 

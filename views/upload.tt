@@ -1,5 +1,5 @@
 <div id="upload">
-    <form action="<% upload_route %>" method="post" enctype="multipart/form-data">
+   <form action="<% upload_route %>" method="post" enctype="multipart/form-data">
             <li class="logout"> <a href="<% logout_url %>"> Logout </a></li>
          <ul class="nav">
             <li><input type="file" name="file" id="file" multiple=""></li>

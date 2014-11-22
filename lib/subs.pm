@@ -1,6 +1,7 @@
 package subs;
 use Dancer ':syntax';
 use String::Random;
+use Data::Dumper;
 
 our $upload_dir = setting('upload_basedir');
 our $share_dir= setting('share_basedir');
@@ -44,10 +45,11 @@ sub share {
     my $url = 'pub'.'/'."$user".'/'."$rstr";
 
     if ( ref $fileref eq 'ARRAY' ) {
+        debug "ARRAY!!!\n";
         foreach my $fkey (keys (@$fileref)) {
             next if $fkey =~ /\.\./g;
             debug "fkey = $fkey\n";
-            my $rval = mklink("@$fileref[$fkey]","$rstr");
+            my $rval = mklink(@$fileref[$fkey],$rstr);
         }
         if ($rval) {
             return  $url;
@@ -58,7 +60,7 @@ sub share {
     }
     else {
         return if $fileref =~ /\.\./g;
-        mklink("$fileref","$rstr");
+        mklink($fileref,$rstr);
     }
 
 }
@@ -73,7 +75,7 @@ sub mklink {
     my $link = "$path".'/'."$file";
     my $dest = '../../../../upload'.'/'."$user".'/'."$file";
     debug "dest = $dest\n";
-    my $returnvalue =  symlink ("$dest","$link") || return false;
+    my $returnvalue =  symlink ($dest,$link) || return false;
     debug "symlink ret val = $returnvalue\n";
     return true;
 }

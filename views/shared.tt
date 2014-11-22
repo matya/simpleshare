@@ -1,7 +1,26 @@
+<!--<SCRIPT language="javascript">
+$(document).ready(function() {
+    $('#selecctall').click(function(event) {  //on click 
+        if(this.checked) { // check select status
+            $('.checkbox<% dir %>').each(function() { //loop through each checkbox
+                this.checked = true;  //select all checkboxes with class "checkbox1"               
+            });
+        }else{
+            $('.checkbox<% dir %>').each(function() { //loop through each checkbox
+                this.checked = false; //deselect all checkboxes with class "checkbox1"                       
+            });         
+        }
+    });
+    
+});
+</SCRIPT>
+-->
+
 <div id="upload">
     <form action="<% upload_route %>" method="post" enctype="multipart/form-data">
             <li class="logout"> <a href="<% logout_url %>"> Logout </a></li>
          <ul class="nav">
+</ul>
             <li><input type="file" name="file" id="file" multiple=""></li>
             <li><input type="submit" name="submit" value="upload" id="submit"></li>
             <li> <a href="<% shared_url %>"> Shared</a></li>
@@ -16,20 +35,28 @@
     <div id="filelist">
         <form action="<% action_url %>" method="post">
         <% IF files.size %>
-            <h2> Uploaded files: </h2>
+            <h2> Shared files: </h2>
             <br>
             <table class=upload_t>
             <tr>
-            <% FOREACH file IN files.sort %>
-                 <td><a href="download/<% file %>"> <% file %> </a></td>
-                 <td><input type="checkbox" name="filelist" value="<% file %>"></td><tr>
+            <% FOREACH dir IN files.keys.sort %>
+
+                 <td><a href="public/pub/<% dir %>"> <% dir %> </a></td>
+                 <td><input type="checkbox" id="selecctall"/> Selecct All</td>
+                    <% FOREACH file IN files.$dir %>
+                        <tr>
+                        <td><a href="<% sharedir %>/<% dir %>/<% file %>"> <% file %> </a></td>
+                        <td><input class="checkbox<% dir %>" type="checkbox" name="filelist" value="<% file %>"></td><tr>
+                        </tr>
+                    <% END %>
+
             <% END %>
-            </table>
+
         <% END %>
+            </table>
         <br>
         <H2> Action </H2>
         <br>
-        <input type="submit" name="action" value="share" id="share">
         <input type="submit" name="action" value="unshare" id="unshare">
         <input type="submit" name="action" value="delete" id="delete">
         </form>
