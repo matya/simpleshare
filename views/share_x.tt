@@ -1,0 +1,26 @@
+<div id="page">
+    <div id="filelist">
+        <form action="<% action_url %>" method="post">
+        <% IF files.size %>
+            <h2> Shared files: </h2>
+            <br>
+            <table class=upload_t>
+            <tr>
+            <% FOREACH file IN files %>
+                <tr>
+                 <td><a href="<% shared_url %>/<% file %>"> <% file %> </a></td>
+                  <td><a href="<% sharedir %>/<% dir %>/<% file %>"> <% file %> </a></td>
+                 <td><input type="checkbox" id="selecctall"/> Selecct All</td>
+                 </tr>
+            <% END %>
+
+        <% END %>
+            </table>
+        <br>
+        <H2> Action </H2>
+        <br>
+        <input type="submit" name="action" value="unshare" id="unshare">
+        <input type="submit" name="action" value="delete" id="delete">
+        </form>
+    </div>
+</div>

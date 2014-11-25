@@ -4,6 +4,8 @@ use Dancer ':syntax';
 use File::Find::Wanted;
 
 
+my $share_basedir = setting('share_basedir');
+
 post '/shared' => sub {
     my $user = session('logged_in_user');
     my $sharedir = 'pub/'."$user";
@@ -29,6 +31,28 @@ get '/shared' => sub {
     };
 };
 
+get qr{/shared/([\d\w]+$)} => sub {
+    my $user = session('logged_in_user');
+    my ($var) = splat;
+    debug "VAR = $var\n";
+    my $path = 'public'.'/'."$share_basedir".'/'."$user".'/'."$var";
+    my $sharedir = '/pub/'."$user";
+    debug "PATH = $path\n";
+    if ( ! -d $path ) {
+        template 'shared' => {
+            msg => "no such share\n",
+        };
+    } 
+    else {
+        template 'share_x' => {
+            files => list_dirs2($path),
+            dir => $var,
+            sharedir => $sharedir,
+        };
+    }
+
+};
+
 
 sub list_files {
     my ($user) = @_;
@@ -37,6 +61,14 @@ sub list_files {
     debug "Files = @files\n";
 }
 
+sub list_dirs2 {
+    my ($path) = @_;
+    opendir (my $dh, $path) or die "Can\'t open dir $path, $!\n";
+        my @files= grep { !/^(\.)+$/ }  readdir( $dh );
+    debug "FILES = @files\n";
+    close $dh;
+    return \@files if @files;
+}
 
 sub list_dirs {
     my ($user) = @_;
@@ -53,7 +85,6 @@ sub list_dirs {
         debug Dumper(@files);
         close $dh;
         $flist->{$share} = \@files;
-        
     }
     debug Dumper($flist);
     return $flist;

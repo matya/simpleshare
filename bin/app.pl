@@ -18,7 +18,7 @@ hook before_template => sub {
     my $tokens = shift;
     $tokens->{'login_url'}  = uri_for('/login');
     $tokens->{'logout_url'} = uri_for('/logout');
-#    $tokens->{'action_url'} = uri_for('/upload');
+    $tokens->{'upload_url'} = uri_for('/upload');
     $tokens->{'shared_url'} = uri_for('/shared');
 };
 

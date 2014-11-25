@@ -287,14 +287,6 @@ label {
   background: #313131;
 }
 
-#upload {
- text-align:left; 
- margin: 20px;
-}
-
-#upload p {
-    color: green;
-}
 
 #filelist {
     text-align: center;
@@ -333,6 +325,10 @@ label {
     background-color: #133;
 }
 
+#header{
+    padding: 20px;
+}
+
 #submit{
     padding:5px;
     border: solid 1px #000;
@@ -340,8 +336,14 @@ label {
     border-radius: 5px;
 }
 
+#upload {
+    float: left;
+    position: fixed;
+    padding: 20px;
+}
+     
+
 .upload_t {
-    text-align: center;
     margin:0 auto;
     color: green;
     border: solid 1px #000;
