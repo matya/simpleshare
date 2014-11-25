@@ -25,9 +25,14 @@ sub listfiles {
 sub createuser {
     my ($user) = @_;
     if  ($user =~ /[\w\d]*/) {
+        my $share_dir .= 'public/'."$share_dir";
+        debug "SHAREDIR = $share_dir\n";
         my $path = "$upload_dir".'/'."$user";
-        my $sharepath = "$share_dir".'/'."$user";
+        my $sharepath = $share_dir.'/'."$user";
         mkdir $path if  ! -d $path ;
+        #what would be mkdir -p in perl ? 
+        #create dirs one by one
+        mkdir $share_dir if ! -d $share_dir;
         mkdir $sharepath if ! -d $sharepath;
     }
     else {
