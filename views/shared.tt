@@ -18,23 +18,24 @@ $(document).ready(function() {
 
 <div id="page">
     <div id="filelist">
-        <form action="<% action_url %>" method="post">
-        <% IF files.size %>
+        <form action="<% shared_url %>" method="post">
+        <% IF shares.size %>
             <h2> Shared files: </h2>
             <br>
             <table class=upload_t>
             <tr>
-            <% FOREACH dir IN files.keys.sort %>
+            <% FOREACH share IN shares.sort %>
 
-                 <td><a href="<% shared_url %>/<% dir %>"> <% dir %> </a></td>
+                 <td><a href="<% shared_url %>/<% share %>"> <% share %> </a></td>
                  <td><input type="checkbox" id="selecctall"/> Selecct All</td>
-                    <% FOREACH file IN files.$dir %>
+<!--                    <% FOREACH file IN files.$dir %>
                         <tr>
                         <td><a href="<% sharedir %>/<% dir %>/<% file %>"> <% file %> </a></td>
                         <td><input class="checkbox<% dir %>" type="checkbox" name="filelist" value="<% file %>"></td><tr>
                         </tr>
                     <% END %>
-
+-->
+            </tr>
             <% END %>
 
         <% END %>

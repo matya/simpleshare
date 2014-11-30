@@ -11,7 +11,7 @@
 </div>
 <div id="page">
     <div id="filelist">
-        <form action="<% action_url %>" method="post">
+        <form action="<% upload_url %>" method="post">
         <% IF files.size %>
             <h2> Uploaded files: </h2>
             <br>

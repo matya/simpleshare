@@ -13,7 +13,6 @@ post '/upload' => sub {
     debug Dumper($req) ;
     if ( (defined $req->{'submit'}) && ($req->{'submit'} eq 'upload')) {
         my $file = request->upload('file');                        
-        my $user = session('logged_in_user');
         if ($file) {
         my @files;
             debug "reference or not ??\n";
@@ -40,16 +39,11 @@ post '/upload' => sub {
     }
     elsif ( $req->{'action'} ) {
         if ($req->{'action'} eq 'share') {
-            if ($ req->{'filelist'} ) {
+            if ($req->{'filelist'} ) {
                 my $file = $req->{'filelist'};
                 # don't use \" for $file, or 
-                subs::share($file);
+                subs::share($file,$user);
                 return redirect '/shared';
-#                template 'shared' => {
-#                    msg => 'please select a file to share',
-##                    files => subs::findshared($user),
-#                };
-
             }
             else {
                 template 'upload' => {
@@ -58,9 +52,11 @@ post '/upload' => sub {
                 };
             }
         }
-        elsif ($req->{'action'} eq 'unshare') {
-            if ($ req->{'filelist'} ) {
-                debug 'Unshare\n';
+        elsif ($req->{'action'} eq 'delete') {
+            if ($req->{'filelist'} ) {
+                my $files = $req->{'filelist'};
+                subs::delete($files,$user);
+                return redirect '/upload';
             }
             else {
                 template 'upload' => {

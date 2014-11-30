@@ -35,3 +35,5 @@ my ($success, $realm) = authenticate_user(
 };
 
 
+#get qr{/share} => sub {
+#    gt

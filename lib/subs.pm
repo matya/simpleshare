@@ -5,13 +5,15 @@ use Data::Dumper;
 
 our $upload_dir = setting('upload_basedir');
 our $share_dir= setting('share_basedir');
+our $public = 'public/';
+
 
 sub listfiles {
     my ($user)  = @_;
     my @nofile = '../upload';
-    my $path = "$upload_dir".'/'."$user";
+    my $path = $upload_dir.'/'.$user;
     exit if ($user =~ m/\.\./);
-    opendir(my $u_fd,$path) or die "can't open $path, $!\n";
+    opendir(my $u_fd,$path) or die "can\'t open $path, $!\n";
     my @list_of_files = grep { !/^\./ } readdir( $u_fd );
     close $u_fd;
     if (@list_of_files) {
@@ -25,15 +27,11 @@ sub listfiles {
 sub createuser {
     my ($user) = @_;
     if  ($user =~ /[\w\d]*/) {
-        my $share_dir .= 'public/'."$share_dir";
-        debug "SHAREDIR = $share_dir\n";
-        my $path = "$upload_dir".'/'."$user";
-        my $sharepath = $share_dir.'/'."$user";
+        my $share_dir = $public.$share_dir;
+        debug "susb::createuser::SHAREDIR = $share_dir\n";
+        my $path = $upload_dir.'/'.$user;
+        my $sharepath = $share_dir.'/'.$user;
         mkdir $path if  ! -d $path ;
-        #what would be mkdir -p in perl ? 
-        #create dirs one by one
-        mkdir $share_dir if ! -d $share_dir;
-        mkdir $sharepath if ! -d $sharepath;
     }
     else {
         debug "user contains wrong characters\n";
@@ -42,49 +40,76 @@ sub createuser {
 }
 
 sub share {
-    my ($fileref) = @_;
-    my $rval;
+    my ($fileref,$user) = @_;
     my $rndstring = String::Random->new;
     my $rstr = $rndstring->randpattern("CCccccn");
-    my $user = session('logged_in_user');
-    my $url = 'pub'.'/'."$user".'/'."$rstr";
-
+    my $url = 'pub'.'/'."$rstr";
     if ( ref $fileref eq 'ARRAY' ) {
-        debug "ARRAY!!!\n";
+        debug "subs::share ARRAY!!!\n";
         foreach my $fkey (keys (@$fileref)) {
-            next if $fkey =~ /\.\./g;
-            debug "fkey = $fkey\n";
-            my $rval = mklink(@$fileref[$fkey],$rstr);
-        }
-        if ($rval) {
-            return  $url;
-        }
-        else {
-            return false;
+            my $file = @$fileref[$fkey];
+            next if $file =~ /\.\./g;
+            debug "subs::share fkey = $fkey\n";
+            mklink($file,$rstr,$user);
         }
     }
     else {
         return if $fileref =~ /\.\./g;
-        mklink($fileref,$rstr);
+        mklink($fileref,$rstr,$user);
     }
-
 }
 
 sub mklink {
-    my ($file,$rnd) = @_;
-    my $user = session('logged_in_user');
+    my ($file,$rnd,$user) = @_;
 #    my $path = 'public/'."$url";
-    my $path = $share_dir.'/'."$user".'/'."$rnd";
+    my $path = $public . $share_dir . '/' . $rnd;
     mkdir $path || debug "err $!\n";
-    debug "PATH = $path\n";
-    my $link = "$path".'/'."$file";
-    my $dest = '../../../../upload'.'/'."$user".'/'."$file";
-    debug "dest = $dest\n";
+    my $link = $path.'/'.$file;
+    debug "subs::mklink::link = $link\n";
+    my $dest = '../../../upload'.'/'.$user.'/'.$file;
+    debug "subs:;mklink::dest = $dest\n";
     my $returnvalue =  symlink ($dest,$link) || return false;
-    debug "symlink ret val = $returnvalue\n";
+    debug "subs::mklink::symlink ret val = $returnvalue\n";
     return true;
 }
 
-sub findshared {
-    return;
+sub delete {
+    my ($fileref,$user) = @_;
+    my $path = $upload_dir.'/'.$user;
+    debug "subs::delete::path $path\n";
+    if ( ref $fileref eq 'ARRAY' ) {
+        foreach my $fkey (keys (@$fileref)) {
+            my $file = @$fileref[$fkey];
+            next if $file =~ /\.\./g;
+            my $fullpath = $path.'/'.$file;
+            debug "subs::delete fullpath = $fullpath\n";
+            unlink $fullpath or warn "Could not unlink $fullpath: $!";
+        }
+    }
+    else {
+        return if $fileref =~ /\.\./g;
+        my $fullpath = $path.'/'.$fileref;
+        unlink $fullpath or warn "Could not unlink $fullpath: $!";
+    }
 }
+
+# delete and unshare subs look almost identical ...
+sub unshare {
+    my ($linkref,$share) = @_;
+    my $path = $public.'/'.$share_dir.'/'.$share;
+    if ( ref $linkref eq 'ARRAY' ) {
+        foreach my $lkey (keys (@$linkref)) {
+            my $link = @$linkref[$lkey];
+            next if $link =~ /\.\./g;
+            my $fullpath = $path.'/'.$link;
+            debug "subs::unshare fullpath = $fullpath\n";
+            unlink $fullpath or warn "Could not unlink $fullpath: $!";
+        }
+    }
+    else {
+        return if $linkref =~ /\.\./g;
+        my $fullpath = $path.'/'.$linkref;
+        unlink $fullpath or warn "Could not unlink $fullpath: $!";
+    }
+}
+
