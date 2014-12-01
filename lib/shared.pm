@@ -1,7 +1,6 @@
 package shared;
 use Data::Dumper;
 use Dancer ':syntax';
-use File::Find::Wanted;
 use Cwd qw(abs_path realpath);
 use File::Spec qw(splitdir);
 
