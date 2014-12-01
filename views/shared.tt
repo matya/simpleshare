@@ -17,9 +17,9 @@ $(document).ready(function() {
 -->
 
 <div id="page">
-    <div id="filelist">
-        <form action="<% shared_url %>" method="post">
         <% IF shares.size %>
+        <div id="filelist">
+        <form action="<% shared_url %>" method="post">
             <h2> Shared files: </h2>
             <br>
             <table class=upload_t>
@@ -27,7 +27,7 @@ $(document).ready(function() {
             <% FOREACH share IN shares.sort %>
 
                  <td><a href="<% shared_url %>/<% share %>"> <% share %> </a></td>
-                 <td><input type="checkbox" id="selecctall"/> Selecct All</td>
+                 <td><input type="checkbox" id="selecctall"/> Select All</td>
 <!--                    <% FOREACH file IN files.$dir %>
                         <tr>
                         <td><a href="<% sharedir %>/<% dir %>/<% file %>"> <% file %> </a></td>
@@ -38,13 +38,19 @@ $(document).ready(function() {
             </tr>
             <% END %>
 
-        <% END %>
             </table>
         <br>
+<!--
         <H2> Action </H2>
         <br>
-        <input type="submit" name="action" value="unshare" id="unshare">
-        <input type="submit" name="action" value="delete" id="delete">
+        <input type="submit" name="action" value="unshare" id="unshare"> 
+-->
         </form>
+        <% ELSE %>
+            <div id="filelist">
+            <h2> nothing is shared yet</h2
+            </div>
+        <% END %>
+
     </div>
 </div>

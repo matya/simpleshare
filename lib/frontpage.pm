@@ -4,6 +4,7 @@ use Data::Dumper;
 use Dancer::Plugin::Auth::Extensible;
 
 get '/' => sub {
+    return redirect '/upload' if session('logged_in_user');
     template 'front.tt';
 };
 
@@ -33,7 +34,3 @@ my ($success, $realm) = authenticate_user(
         return redirect "/";
     }
 };
-
-
-#get qr{/share} => sub {
-#    gt

@@ -13,6 +13,11 @@ sub listfiles {
     my @nofile = '../upload';
     my $path = $upload_dir.'/'.$user;
     exit if ($user =~ m/\.\./);
+    return ls($path);
+}
+
+sub ls {
+    my ($path) = @_;
     opendir(my $u_fd,$path) or die "can\'t open $path, $!\n";
     my @list_of_files = grep { !/^\./ } readdir( $u_fd );
     close $u_fd;
@@ -20,7 +25,7 @@ sub listfiles {
         return \@list_of_files;
     }
     else {
-        return \@nofile;
+        return undef;
     }
 }
 
@@ -111,5 +116,6 @@ sub unshare {
         my $fullpath = $path.'/'.$linkref;
         unlink $fullpath or warn "Could not unlink $fullpath: $!";
     }
+    return ls($path);
 }
 

@@ -12,8 +12,6 @@ post '/shared' => sub {
     my $user = session('logged_in_user');
     my $sharedir = $share_basedir.'/'.$user;
     my $req = request->params();
-    debug "shared::/shared REQUEST\n";
-    debug Dumper($req) ;
     template 'shared' => {
         shares => list_shares($user),
         sharedir => $sharedir,
@@ -23,6 +21,7 @@ post '/shared' => sub {
  
 get '/shared' => sub {
     my $user = session('logged_in_user');
+    # pub/$user
     my $sharedir = $share_basedir.'/'.$user;
     my $req = request->params();
     template 'shared' => {
@@ -35,19 +34,25 @@ any qr{/shared/([\d\w]+$)} => sub {
     my $user = session('logged_in_user');
     my ($var) = splat;
     my $req = request->params();
-    debug "VAR = $var\n";
     my $sharedir = $share_basedir;
     my $path = 'public/'.$sharedir.'/'.$var;
     debug "shared:get_shared::PATH = $path\n";
     debug "shared::REQUEST\n";
     debug Dumper($req) ;
     if ( (defined $req->{'action'}) && ($req->{'action'} eq 'unshare')) {
-       if ($req->{'filelist'} ) {
-           my $links = $req->{'filelist'};
-           subs::unshare($links,$var);
-           return redirect "/shared/$var";
-       }
-       else {
+        if ($req->{'filelist'} ) {
+            my $links = $req->{'filelist'};
+            my $left = subs::unshare($links,$var);
+            
+            if ( ref $left eq 'ARRAY' ) {
+                return redirect "/shared/$var";
+            } 
+            # redirect to /shared if no files
+            else {
+                return redirect '/shared';
+            }
+        }
+    else {
            template 'share_x' => {
                dir => $var,
                files => list_files($path),

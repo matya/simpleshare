@@ -6,7 +6,7 @@ $(document).ready(function() {
                 this.checked = true;  //select all checkboxes with class "checkbox1"               
             });
         }else{
-            $('.checkbox<% dir %>').each(function() { //loop through each checkbox
+            $('.checkbox4share').each(function() { //loop through each checkbox
                 this.checked = false; //deselect all checkboxes with class "checkbox1"                       
             });         
         }
@@ -23,7 +23,7 @@ $(document).ready(function() {
             <br>
             <table class=upload_t>
             <tr>
-            <td><% shared_url %>/<% dir %></td>
+            <td><% public_url %>/<% dir %></td>
             <td><input type="checkbox" id="selecctall"/> Selecct All</td>
             <% FOREACH file IN files %>
                 <tr>

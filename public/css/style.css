@@ -290,6 +290,7 @@ label {
 
 #filelist {
     text-align: center;
+    padding: 50px;
 }
 
 #file {
@@ -327,6 +328,8 @@ label {
 
 #header{
     padding: 20px;
+    border-bottom: 1px solid #dfdfe0;
+    margin: 10px;
 }
 
 #submit{
@@ -354,4 +357,15 @@ label {
 }
 #page h2 {
     font-size: 20px;
+}
+
+#footer {
+        font-size: 0.75em;
+        border: 1px solid #dfdfe0;
+        padding:1em;
+        margin: 20px;
+        line-height: 1.5em;
+        border-left: 0;
+        border-right: 0;
+        clear: both;
 }
