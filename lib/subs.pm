@@ -2,6 +2,7 @@ package subs;
 use Dancer ':syntax';
 use String::Random;
 use Data::Dumper;
+use Sort::Naturally;
 
 our $upload_dir = setting('upload_basedir');
 our $share_dir= setting('share_basedir');
@@ -22,6 +23,7 @@ sub ls {
     my @list_of_files = grep { !/^\./ } readdir( $u_fd );
     close $u_fd;
     if (@list_of_files) {
+        @list_of_files = nsort(@list_of_files);
         return \@list_of_files;
     }
     else {
@@ -96,6 +98,7 @@ sub delete {
         my $fullpath = $path.'/'.$fileref;
         unlink $fullpath or warn "Could not unlink $fullpath: $!";
     }
+    clean_links($user);
 }
 
 # delete and unshare subs look almost identical ...
@@ -119,3 +122,58 @@ sub unshare {
     return ls($path);
 }
 
+sub list_shares {
+    my ($user) = @_;
+    my $path = $public.'/'.$share_dir;
+    my @empty;
+    my @usershares;
+    opendir ( my $dh,$path) or die "shared::list_shares can\'t open dir $path, $!\n";
+    my @shares  = grep { !/^(\.)+$/ } readdir ( $dh );
+    close $dh;
+    foreach my $share (@shares) {
+        my $share_path = $path.'/'.$share;
+        opendir (my $dh,$share_path) or die "shared::list_shares2 can\'t open die $share_path, $!\n";
+        my @content = grep { !/^(\.)+$/ } readdir ( $dh );
+        close $dh;
+        if (! $content[0] ) {
+            push @empty,$share;
+            next;
+        }
+        else {
+            # the path to the first file, we need it to findout the username
+            # from the symlink destination
+            my $file_path = $share_path.'/'.$content[0];
+            # link = '../../../upload/test/Doom2.wad'
+            my $link =  readlink($file_path);
+            # we need the dir name before the file
+            my $linktouser = (File::Spec->splitdir( $link))[-2];
+            push @usershares,$share  if ($linktouser eq $user);
+            
+       }
+    }
+         
+    foreach my $share (@empty) {
+        my $full_path=$path.'/'.$share;
+        rmdir $full_path;
+    }
+    return \@usershares;
+
+}
+
+#unlink dangling links
+sub clean_links {
+    my ($user) = @_;
+    my $shareref = list_shares($user);
+    foreach my $share (@$shareref) {
+        my $path = $public.'/'.$share_dir.'/'.$share;
+        my $files = ls($path);
+            foreach my $file (@$files) {
+                my $link = $path.'/'.$file;
+                my $linkdest = readlink($link);
+                debug "subs::clean_shares::deadlink $link\n" if (! -e $linkdest);
+                unlink $link if (! -e $linkdest);
+            }
+    }
+}
+                
+    

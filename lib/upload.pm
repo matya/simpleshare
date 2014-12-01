@@ -9,14 +9,9 @@ our $VERSION = '0.1';
 post '/upload' => sub {
     my $user = session('logged_in_user');
     my $req = request->params();
-    debug "REQUEST\n";
-    debug Dumper($req) ;
     if ( (defined $req->{'submit'}) && ($req->{'submit'} eq 'upload')) {
         my $file = request->upload('file');                        
         if ($file) {
-        my @files;
-            debug "reference or not ??\n";
-            debug Dumper ($file);
             if ( ref $file eq 'ARRAY' ) {
                 foreach my $fkey (keys (@$file)) {
                     my $filename = process_request(@$file[$fkey]);

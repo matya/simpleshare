@@ -7,7 +7,7 @@ use subs;
 
 #protect all routes by default
 hook 'before' => sub {
-        if  ( ! session('logged_in_user') ) {
+        if  ( ! session('logged_in_user') && ( request->path_info !~ m{^/getfile})) {
             # Pass the original path requested along to the handler:
             # var requested_path => request->path_info;
             request->path_info('/login');
@@ -21,6 +21,7 @@ hook before_template => sub {
     $tokens->{'upload_url'} = uri_for('/upload');
     $tokens->{'shared_url'} = uri_for('/shared');
     $tokens->{'public_url'} = uri_for('/pub');
+    $tokens->{'getfile'} = uri_for('/getfile');
 };
 
 any '/logout' => sub {

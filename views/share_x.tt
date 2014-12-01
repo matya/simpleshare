@@ -19,11 +19,11 @@ $(document).ready(function() {
     <div id="filelist">
         <form action="<% action_url %>" method="post">
         <% IF files.size %>
-            <h2> The files shared via <a href="<% public_url %>/<% dir %>"> <% dir %>: </a> </h2>
+            <h2> The files shared via <a href="<% getfile %>/<% dir %>"> <% dir %>: </a> </h2>
             <br>
             <table class=upload_t>
             <tr>
-            <td><% public_url %>/<% dir %></td>
+            <td><% getfile %>/<% dir %></td>
             <td><input type="checkbox" id="selecctall"/> Selecct All</td>
             <% FOREACH file IN files %>
                 <tr>

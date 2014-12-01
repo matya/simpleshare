@@ -350,6 +350,8 @@ label {
     margin:0 auto;
     color: green;
     border: solid 1px #000;
+    border-collapse:separate; 
+    border-spacing:1em;
 }
 
 .upload_t td {
