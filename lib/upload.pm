@@ -2,6 +2,8 @@ package upload;
 use Dancer ':syntax';
 use Data::Dumper;
 use Sort::Naturally;
+use Encode qw(decode encode);
+use utf8;
 
 
 our $VERSION = '0.1';
@@ -14,14 +16,14 @@ post '/upload' => sub {
         if ($file) {
             if ( ref $file eq 'ARRAY' ) {
                 foreach my $fkey (keys (@$file)) {
-                    my $filename = process_request(@$file[$fkey]);
+                    my $filename = subs::process_request(@$file[$fkey],$user);
                 }
             }
             else {
-                my $filename = process_request($file);
+                my $filename = subs::process_request($file,$user);
             }
             template 'upload' => {
-                msg => 'Doone',
+                msg => 'Done',
                 files => subs::listfiles($user),
             };
         } 
@@ -80,17 +82,7 @@ get '/download/:file' => sub {
     return redirect '/';
 };
 
-sub process_request {
-    my ($ref) = @_;
-    my $user = session('logged_in_user');
-    my $fname = $ref->filename;
-    my $tmpname = $ref->tempname;
-    my $upload_dir = "$subs::upload_dir".'/'."$user";
-    my $destination = $upload_dir .'/'. $fname;
-    $ref->copy_to($destination);
-    unlink $tmpname if -e $tmpname;
-    return $fname;
-}
+
 
 
 true;

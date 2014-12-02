@@ -3,15 +3,16 @@ use Dancer ':syntax';
 use String::Random;
 use Data::Dumper;
 use Sort::Naturally;
+use Encode;
+use utf8;
 
 our $upload_dir = setting('upload_basedir');
 our $share_dir= setting('share_basedir');
-our $public = 'public/';
+our $p = 'public/';
 
 
 sub listfiles {
     my ($user)  = @_;
-    my @nofile = '../upload';
     my $path = $upload_dir.'/'.$user;
     exit if ($user =~ m/\.\./);
     return ls($path);
@@ -19,12 +20,17 @@ sub listfiles {
 
 sub ls {
     my ($path) = @_;
+    my @utf8files;
     opendir(my $u_fd,$path) or die "can\'t open $path, $!\n";
     my @list_of_files = grep { !/^\./ } readdir( $u_fd );
     close $u_fd;
     if (@list_of_files) {
-        @list_of_files = nsort(@list_of_files);
-        return \@list_of_files;
+        foreach my $file (@list_of_files) {
+            my $utf8file = Encode::decode('UTF-8',$file);
+            push @utf8files,$utf8file;
+        }
+        @utf8files = nsort(@utf8files);
+        return \@utf8files;
     }
     else {
         return undef;
@@ -34,7 +40,7 @@ sub ls {
 sub createuser {
     my ($user) = @_;
     if  ($user =~ /[\w\d]*/) {
-        my $share_dir = $public.$share_dir;
+        my $share_dir = $p.$share_dir;
         debug "susb::createuser::SHAREDIR = $share_dir\n";
         my $path = $upload_dir.'/'.$user;
         my $sharepath = $share_dir.'/'.$user;
@@ -68,15 +74,13 @@ sub share {
 
 sub mklink {
     my ($file,$rnd,$user) = @_;
+#    $file = Encode::decode('UTF-8',$file);
 #    my $path = 'public/'."$url";
-    my $path = $public . $share_dir . '/' . $rnd;
+    my $path = $p . $share_dir . '/' . $rnd;
     mkdir $path || debug "err $!\n";
     my $link = $path.'/'.$file;
-    debug "subs::mklink::link = $link\n";
     my $dest = '../../../upload'.'/'.$user.'/'.$file;
-    debug "subs:;mklink::dest = $dest\n";
     my $returnvalue =  symlink ($dest,$link) || return false;
-    debug "subs::mklink::symlink ret val = $returnvalue\n";
     return true;
 }
 
@@ -89,7 +93,6 @@ sub delete {
             my $file = @$fileref[$fkey];
             next if $file =~ /\.\./g;
             my $fullpath = $path.'/'.$file;
-            debug "subs::delete fullpath = $fullpath\n";
             unlink $fullpath or warn "Could not unlink $fullpath: $!";
         }
     }
@@ -104,13 +107,12 @@ sub delete {
 # delete and unshare subs look almost identical ...
 sub unshare {
     my ($linkref,$share) = @_;
-    my $path = $public.'/'.$share_dir.'/'.$share;
+    my $path = $p.'/'.$share_dir.'/'.$share;
     if ( ref $linkref eq 'ARRAY' ) {
         foreach my $lkey (keys (@$linkref)) {
             my $link = @$linkref[$lkey];
             next if $link =~ /\.\./g;
             my $fullpath = $path.'/'.$link;
-            debug "subs::unshare fullpath = $fullpath\n";
             unlink $fullpath or warn "Could not unlink $fullpath: $!";
         }
     }
@@ -124,7 +126,7 @@ sub unshare {
 
 sub list_shares {
     my ($user) = @_;
-    my $path = $public.'/'.$share_dir;
+    my $path = $p.'/'.$share_dir;
     my @empty;
     my @usershares;
     opendir ( my $dh,$path) or die "shared::list_shares can\'t open dir $path, $!\n";
@@ -142,7 +144,8 @@ sub list_shares {
         else {
             # the path to the first file, we need it to findout the username
             # from the symlink destination
-            my $file_path = $share_path.'/'.$content[0];
+            my $first_file = Encode::decode('UTF-8',$content[0]);
+            my $file_path = $share_path.'/'.$first_file;
             # link = '../../../upload/test/Doom2.wad'
             my $link =  readlink($file_path);
             # we need the dir name before the file
@@ -165,7 +168,7 @@ sub clean_links {
     my ($user) = @_;
     my $shareref = list_shares($user);
     foreach my $share (@$shareref) {
-        my $path = $public.'/'.$share_dir.'/'.$share;
+        my $path = $p.'/'.$share_dir.'/'.$share;
         my $files = ls($path);
             foreach my $file (@$files) {
                 my $link = $path.'/'.$file;
@@ -177,3 +180,14 @@ sub clean_links {
 }
                 
     
+#upload files
+sub process_request {
+    my ($ref,$user) = @_;
+    my $fname = $ref->filename;
+    my $tmpname = $ref->tempname;
+    my $upload_dir = "$upload_dir".'/'."$user";
+    my $destination = $upload_dir .'/'. $fname;
+    $ref->copy_to($destination);
+    unlink $tmpname if -e $tmpname;
+    return $fname;
+}
