@@ -23,8 +23,10 @@ get '/shared' => sub {
     # pub/$user
     my $sharedir = $share_basedir.'/'.$user;
     my $req = request->params();
+    my $shares = subs::list_shares($user);
+    header('Cache-Control' =>  'no-store, no-cache, must-revalidate');
     template 'shared' => {
-        shares => subs::list_shares($user),
+        shares => $shares,
         sharedir => $sharedir,
     };
 };
@@ -34,7 +36,7 @@ any qr{/shared/([\d\w]+$)} => sub {
     my ($var) = splat;
     my $req = request->params();
     my $sharedir = $share_basedir;
-    my $path = 'public/'.$sharedir.'/'.$var;
+    my $path = $subs::share_dir.'/'.$var;
     if ( (defined $req->{'action'}) && ($req->{'action'} eq 'unshare')) {
         if ($req->{'filelist'} ) {
             my $links = $req->{'filelist'};
@@ -74,7 +76,7 @@ any qr{/shared/([\d\w]+$)} => sub {
 
 get qr{/getfile/([\d\w]+$)} => sub {
     my ($share) = splat;
-    my $path = 'public/pub/'.$share;
+    my $path = $subs::share_dir.'/'.$share;
     debug "download:get_shared::PATH = $path\n";
     if ( -d $path ) {
         my $files = subs::ls($path);

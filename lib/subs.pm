@@ -6,9 +6,12 @@ use Sort::Naturally;
 use Encode;
 use utf8;
 
-our $upload_dir = setting('upload_basedir');
-our $share_dir= setting('share_basedir');
-our $p = 'public/';
+#our $upload_dir = setting('upload_basedir');
+our $upload_dir = setting('basedir') .'/'.setting('upload_basedir');
+#our $share_dir= setting('share_basedir');
+our $share_dir = setting('basedir') .'/public/'.setting('share_basedir');
+
+#our $p = '/home/alex/public_html/simpleshare/public/';
 
 
 sub listfiles {
@@ -39,9 +42,8 @@ sub ls {
 
 sub createuser {
     my ($user) = @_;
+	my $pwd = `pwd`;
     if  ($user =~ /[\w\d]*/) {
-        my $share_dir = $p.$share_dir;
-        debug "susb::createuser::SHAREDIR = $share_dir\n";
         my $path = $upload_dir.'/'.$user;
         my $sharepath = $share_dir.'/'.$user;
         mkdir $path if  ! -d $path ;
@@ -56,13 +58,11 @@ sub share {
     my ($fileref,$user) = @_;
     my $rndstring = String::Random->new;
     my $rstr = $rndstring->randpattern("CCccccn");
-    my $url = 'pub'.'/'."$rstr";
+    my $url = setting('share_basedir').'/'."$rstr";
     if ( ref $fileref eq 'ARRAY' ) {
-        debug "subs::share ARRAY!!!\n";
         foreach my $fkey (keys (@$fileref)) {
             my $file = @$fileref[$fkey];
             next if $file =~ /\.\./g;
-            debug "subs::share fkey = $fkey\n";
             mklink($file,$rstr,$user);
         }
     }
@@ -76,7 +76,7 @@ sub mklink {
     my ($file,$rnd,$user) = @_;
 #    $file = Encode::decode('UTF-8',$file);
 #    my $path = 'public/'."$url";
-    my $path = $p . $share_dir . '/' . $rnd;
+    my $path = $share_dir . '/' . $rnd;
     mkdir $path || debug "err $!\n";
     my $link = $path.'/'.$file;
     my $dest = '../../../upload'.'/'.$user.'/'.$file;
@@ -87,7 +87,6 @@ sub mklink {
 sub delete {
     my ($fileref,$user) = @_;
     my $path = $upload_dir.'/'.$user;
-    debug "subs::delete::path $path\n";
     if ( ref $fileref eq 'ARRAY' ) {
         foreach my $fkey (keys (@$fileref)) {
             my $file = @$fileref[$fkey];
@@ -107,7 +106,7 @@ sub delete {
 # delete and unshare subs look almost identical ...
 sub unshare {
     my ($linkref,$share) = @_;
-    my $path = $p.'/'.$share_dir.'/'.$share;
+    my $path = $share_dir.'/'.$share;
     if ( ref $linkref eq 'ARRAY' ) {
         foreach my $lkey (keys (@$linkref)) {
             my $link = @$linkref[$lkey];
@@ -126,9 +125,9 @@ sub unshare {
 
 sub list_shares {
     my ($user) = @_;
-    my $path = $p.'/'.$share_dir;
+    my $path = $share_dir;
     my @empty;
-    my @usershares;
+    my @usershares = ();
     opendir ( my $dh,$path) or die "shared::list_shares can\'t open dir $path, $!\n";
     my @shares  = grep { !/^(\.)+$/ } readdir ( $dh );
     close $dh;
@@ -168,12 +167,12 @@ sub clean_links {
     my ($user) = @_;
     my $shareref = list_shares($user);
     foreach my $share (@$shareref) {
-        my $path = $p.'/'.$share_dir.'/'.$share;
+        my $path = $share_dir.'/'.$share;
         my $files = ls($path);
             foreach my $file (@$files) {
                 my $link = $path.'/'.$file;
                 my $linkdest = readlink($link);
-                debug "subs::clean_shares::deadlink $link\n" if (! -e $linkdest);
+#                debug "subs::clean_shares::deadlink $link\n" if (! -e $linkdest);
                 unlink $link if (! -e $linkdest);
             }
     }
