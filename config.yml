@@ -9,6 +9,7 @@ appname: "fileshare"
 # views/layouts/main.tt)
 layout: "main"
 
+basedir: '.'
 upload_basedir: 'upload'
 share_basedir: 'pub'
 

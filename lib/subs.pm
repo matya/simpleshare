@@ -4,15 +4,9 @@ use String::Random;
 use Data::Dumper;
 use Sort::Naturally;
 use Encode;
-use utf8;
 
-#our $upload_dir = setting('upload_basedir');
 our $upload_dir = setting('basedir') .'/'.setting('upload_basedir');
-#our $share_dir= setting('share_basedir');
 our $share_dir = setting('basedir') .'/public/'.setting('share_basedir');
-
-#our $p = '/home/alex/public_html/simpleshare/public/';
-
 
 sub listfiles {
     my ($user)  = @_;
@@ -49,15 +43,17 @@ sub createuser {
         mkdir $path if  ! -d $path ;
     }
     else {
+        #this will actually never happen as we create users ourselves
         debug "user contains wrong characters\n";
         return false;
     }
+    return true;
 }
 
 sub share {
     my ($fileref,$user) = @_;
     my $rndstring = String::Random->new;
-    my $rstr = $rndstring->randpattern("CCccccn");
+    my $rstr = $rndstring->randpattern("CCccccnCccCCCccncncncnc");
     my $url = setting('share_basedir').'/'."$rstr";
     if ( ref $fileref eq 'ARRAY' ) {
         foreach my $fkey (keys (@$fileref)) {

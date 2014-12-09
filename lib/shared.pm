@@ -77,7 +77,6 @@ any qr{/shared/([\d\w]+$)} => sub {
 get qr{/getfile/([\d\w]+$)} => sub {
     my ($share) = splat;
     my $path = $subs::share_dir.'/'.$share;
-    debug "download:get_shared::PATH = $path\n";
     if ( -d $path ) {
         my $files = subs::ls($path);
     #    if ( ref @files eq 'ARRAY' ) {
