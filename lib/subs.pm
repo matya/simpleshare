@@ -3,7 +3,7 @@ use Dancer ':syntax';
 use String::Random;
 use Data::Dumper;
 use Sort::Naturally;
-use Encode;
+use Encode qw(decode encode);
 
 our $upload_dir = setting('basedir') .'/'.setting('upload_basedir');
 our $share_dir = setting('basedir') .'/public/'.setting('share_basedir');

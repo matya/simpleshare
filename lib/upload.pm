@@ -3,7 +3,6 @@ use Dancer ':syntax';
 use Data::Dumper;
 use Sort::Naturally;
 use Encode qw(decode encode);
-use utf8;
 
 
 our $VERSION = '0.1';
