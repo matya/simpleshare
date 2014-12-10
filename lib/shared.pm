@@ -1,8 +1,6 @@
 package shared;
 use Data::Dumper;
 use Dancer ':syntax';
-use Cwd qw(abs_path realpath);
-use File::Spec qw(splitdir);
 
 
 our $share_basedir = setting('share_basedir');
@@ -23,10 +21,10 @@ get '/shared' => sub {
     # pub/$user
     my $sharedir = $share_basedir.'/'.$user;
     my $req = request->params();
-    my $shares = subs::list_shares($user);
+    # do not cache the result
     header('Cache-Control' =>  'no-store, no-cache, must-revalidate');
     template 'shared' => {
-        shares => $shares,
+        shares => subs::list_shares($user),
         sharedir => $sharedir,
     };
 };
@@ -79,13 +77,11 @@ get qr{/getfile/([\d\w]+$)} => sub {
     my $path = $subs::share_dir.'/'.$share;
     if ( -d $path ) {
         my $files = subs::ls($path);
-    #    if ( ref @files eq 'ARRAY' ) {
             template 'index' => {
                 files => $files,
                 share => $share,
             },
             { layout => 0 };
-    #   }
     }
 
 };

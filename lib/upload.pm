@@ -4,9 +4,6 @@ use Data::Dumper;
 use Sort::Naturally;
 use Encode qw(decode encode);
 
-
-our $VERSION = '0.1';
-
 post '/upload' => sub {
     my $user = session('logged_in_user');
     my $req = request->params();
@@ -80,8 +77,6 @@ get '/download/:file' => sub {
     return send_file($path, system_path => 1 ) if -e $path;
     return redirect '/';
 };
-
-
 
 
 true;

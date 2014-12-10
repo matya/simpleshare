@@ -28,7 +28,7 @@ my ($success, $realm) = authenticate_user(
         my $user = session('logged_in_user');
         my $result = subs::createuser($user);
         return redirect '/logout' if ! $result;
-        redirect params->{return_url} || "/upload"; 
+        redirect params->{return_url} || '/upload'; 
     }
     else {  
         return redirect "/";
