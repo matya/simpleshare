@@ -2,7 +2,6 @@ NAME
     simpleshare - simple application for data sharing
 
 DESCRIPTION
-
     Upload and share files via randomly generated url.
 
     Some modules used in the code:
@@ -14,20 +13,17 @@ DESCRIPTION
     - Template::Toolkit - Template Processing System
 
 INSTALL
-
     on a Debian Jessie:
     apt-get install  libdancer-plugin-auth-extensible-perl libdancer-session-cookie-perl libsort-naturally-perl libstring-random-perl libtemplate-perl
 
     on other systems: install perl modules mentioned above with all dependencies
 
 CONFIGURATION
-    
     Create directories: upload and public/pub -  mkdir {upload,public/pub}
     Set the proper basedir path in config.yaml
     The default should work if the application is launched from the root directory
 
 USAGE 
-
     cd to the root of application and start it ./bin/app.pl, open browser and open $servername:3000
     install Plack:
         apt-get install libplack-perl
@@ -35,7 +31,6 @@ USAGE
         plackup bin/app.pl
 
 LICENSE
-
     public/css/style.css:
     Copyright (c) 2012-2014 Thibaut Courouble
 
