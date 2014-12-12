@@ -3,14 +3,15 @@
 # all the settings in this file will be loaded at Dancer's startup.
 
 # Your application's name
-appname: "multifileupload"
-
-#directory in app root
-upload_basedir: 'upload'
+appname: "fileshare"
 
 # The default layout to use for your application (located in
 # views/layouts/main.tt)
 layout: "main"
+
+basedir: '.'
+upload_basedir: 'upload'
+share_basedir: 'pub'
 
 # when the charset is set to UTF-8 Dancer will handle for you
 # all the magic of encoding and decoding. You should not care
@@ -28,4 +29,28 @@ engines:
   template_toolkit:
 #     start_tag: '[%'
 #     end_tag:   '%]'
+
+session: "cookie"
+session_cookie_key: ";G69\[jja1212Z"
+session_name: "filesharing"
+session_expires: 2h
+
+
+plugins:
+ Auth::Extensible:
+  no_default_pages: 1
+  no_login_handler: 1
+  login_page: '/login'
+  realms:
+   users:
+    provider: Config
+    users:
+      - user: test  
+        pass: beer
+        roles:
+         - 'admin'
+      - user: test2 
+        pass: beer
+        roles:
+         - 'admin'
 

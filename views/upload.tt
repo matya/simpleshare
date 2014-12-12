@@ -1,23 +1,54 @@
+<SCRIPT language="javascript">
+$(document).ready(function() {
+    $('#selecctall').click(function(event) {  //on click
+        if(this.checked) { // check select status
+            $('.checkbox4upload').each(function() { //loop through each checkbox
+                this.checked = true;  //select all checkboxes with class "checkbox1"
+            });
+        }else{
+            $('.checkbox4upload').each(function() { //loop through each checkbox
+                this.checked = false; //deselect all checkboxes with class "checkbox1"
+            });
+        }
+    });
+
+});
+</SCRIPT>
 <div id="upload">
-    <form action="<% upload_route %>" method="post" enctype="multipart/form-data">
-     <p>
-        <input type="file" name="file" id="file" multiple="">
-     </p>
-        <input type="submit" name="submit" value="Submit">
-    <form>
-    <div id="page">
-    <p>
-    
-    <% IF msg %>  
-        <% msg %>
-    <% END %>
-    </p>
-    </div>
-    <div id="content">
-    <% IF files.size %>
-        <% FOREACH file IN files.sort %>
-         <a href="download/<% file %>"> <% file %> </a> <br>
+   <form action="<% upload_route %>" method="post" enctype="multipart/form-data">
+            <li><input type="file" name="file" id="file" multiple=""></li>
+            <li><input type="submit" name="submit" value="upload" id="submit"></li>
+            <% IF msg %>  
+                <% msg %> 
+            <% END %>
+         </ul>
+
+    </form>
+</div>
+<div id="page">
+        <% IF files.size %>
+        <div id="filelist">
+            <form action="<% upload_url %>" method="post">
+            <h2> Uploaded files: </h2>
+            <br>
+            <table class=upload_t>
+            <tr>
+            <td>Select All</td><td><input type="checkbox" id="selecctall"/> </td></tr>
+            <% FOREACH file IN files.sort %>
+                 <td><a href="download/<% file %>"> <% file %> </a></td>
+                 <td><input class="checkbox4upload" type="checkbox" name="filelist" value="<% file %>"></td><tr>
+            <% END %>
+            </table>
+        <br>
+        <H2> Action </H2>
+        <br>
+        <input type="submit" name="action" value="share" id="share">
+        <input type="submit" name="action" value="delete" id="delete">
+        </form>
+        <% ELSE %>
+            <div id="filelist">
+            <h2> nothing is uploaded yet</h2
+            </div>
         <% END %>
-    <% END %>
     </div>
 </div>

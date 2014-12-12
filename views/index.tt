@@ -1,0 +1,14 @@
+<div id="index">
+        <% IF files.size %>
+        <div id="filelist">
+            <table class=upload_t>
+            <tr>
+            <% FOREACH file IN files %>
+                 <td><a href="<% public_url %>/<% share %>/<% dir %>/<% file %>"> <% file %> </a></td>
+                 </tr>
+            <% END %>
+
+            </table>
+        <% END %>
+    </div>
+</div>

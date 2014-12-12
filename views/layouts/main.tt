@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=<% settings.charset %>" />
-<title>multifileupload</title>
+<title>fileshare</title>
 <link rel="stylesheet" href="<% request.uri_base %>/css/style.css" />
 
 <script type="text/javascript">/* <![CDATA[ */
@@ -12,7 +12,23 @@
 
 </head>
 <body>
+
+<% IF session.logged_in_user %>
+<div id=header>
+    <li class="logout"> <a href="<% logout_url %>"> Logout </a></li>
+    <ul class="nav">
+        <li> </li>
+        <li><a href=<% upload_url %> >Upload</a>
+        </li>
+        <li><a href=<% shared_url %> >Share</a>
+        </li>
+    </ul>
+</div>
+<% END %>
+
+
 <% content %>
+
 <div id="footer">
 Powered by <a href="http://perldancer.org/">Dancer</a> <% dancer_version %>
 </div>

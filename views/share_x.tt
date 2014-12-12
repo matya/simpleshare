@@ -1,0 +1,44 @@
+<SCRIPT language="javascript">
+$(document).ready(function() {
+    $('#selecctall').click(function(event) {  //on click 
+        if(this.checked) { // check select status
+            $('.checkbox4share').each(function() { //loop through each checkbox
+                this.checked = true;  //select all checkboxes with class "checkbox1"               
+            });
+        }else{
+            $('.checkbox4share').each(function() { //loop through each checkbox
+                this.checked = false; //deselect all checkboxes with class "checkbox1"                       
+            });         
+        }
+    });
+    
+});
+</SCRIPT>
+
+<div id="page">
+    <div id="filelist">
+        <form action="<% action_url %>" method="post">
+        <% IF files.size %>
+            <h2> The files shared via <a href="<% getfile %>/<% dir %>"> <% dir %>: </a> </h2>
+            <br>
+            <table class=upload_t>
+            <tr>
+            <td><% getfile %>/<% dir %></td>
+            <td><input type="checkbox" id="selecctall"/> Selecct All</td>
+            <% FOREACH file IN files %>
+                <tr>
+                 <td><a href="<% public_url %>/<% dir %>/<% file %>"> <% file %> </a></td>
+                 <td><% public_url %>/<% dir %>/<% file %></td>
+                 <td><input class="checkbox4share" type="checkbox" name="filelist" value="<% file %>"></td><tr>
+                 </tr>
+            <% END %>
+
+        <% END %>
+            </table>
+        <br>
+        <H2> Action </H2>
+        <br>
+        <input type="submit" name="action" value="unshare" id="unshare">
+        </form>
+    </div>
+</div>
