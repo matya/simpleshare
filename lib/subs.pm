@@ -3,6 +3,7 @@ use Dancer ':syntax';
 use String::Random;
 use Data::Dumper;
 use Sort::Naturally;
+use File::Spec;
 use Encode qw(decode encode);
 
 our $upload_dir = setting('basedir') .'/'.setting('upload_basedir');
@@ -54,7 +55,7 @@ sub share {
     my ($fileref,$user) = @_;
     my $rndstring = String::Random->new;
     my $rstr = $rndstring->randpattern("CCccccnCccCCCccncncncnc");
-    my $url = setting('share_basedir').'/'."$rstr";
+    my $url = setting('share_basedir').'/'.$rstr;
     if ( ref $fileref eq 'ARRAY' ) {
         foreach my $fkey (keys (@$fileref)) {
             my $file = @$fileref[$fkey];
@@ -70,8 +71,6 @@ sub share {
 
 sub mklink {
     my ($file,$rnd,$user) = @_;
-#    $file = Encode::decode('UTF-8',$file);
-#    my $path = 'public/'."$url";
     my $path = $share_dir . '/' . $rnd;
     mkdir $path || debug "err $!\n";
     my $link = $path.'/'.$file;
@@ -180,7 +179,7 @@ sub process_request {
     my ($ref,$user) = @_;
     my $fname = $ref->filename;
     my $tmpname = $ref->tempname;
-    my $upload_dir = "$upload_dir".'/'."$user";
+    my $upload_dir = $upload_dir.'/'.$user;
     my $destination = $upload_dir .'/'. $fname;
     $ref->copy_to($destination);
     unlink $tmpname if -e $tmpname;
