@@ -7,7 +7,7 @@ DESCRIPTION
     From time to time I need to share some data with my friends, 
     having a place with lets'say basic authentication works fine
     but than you should also share the credentials.
-    having randomly generated part in url solves the problem for this case:
+    Having randomly generated part in url solves the problem for this case:
      - you do not need to share any passwords
      - the data is secure, as it is hard to guess the random part
 
@@ -20,8 +20,8 @@ DESCRIPTION
      - Coding with Dancer is just pure fun!
 
     The code does the following:
-     Uploads files in upload directory. If you need to share files, creates symlinks in public/pub/$random/$file which you can share.
-     the interface let's you manage shares and uploads - you can delete or unshare stuff.
+     Uploads files in upload directory. If you need to share files, creates symlinks in public/pub/$random/$file which is publicly accessible.
+     You can manage shares and uploads - you can delete or unshare stuff.
      This is sufficient for my needs, but there is still room for improvements :)
     
 
