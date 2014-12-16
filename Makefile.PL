@@ -9,9 +9,9 @@ $eumm_version =~ s/_//;
 
 WriteMakefile(
     NAME                => 'fileshare',
-    AUTHOR              => q{YOUR NAME <youremail@example.com>},
-    VERSION_FROM        => 'lib/upload.pm',
-    ABSTRACT            => 'YOUR APPLICATION ABSTRACT',
+    AUTHOR              => q{Alex Mestiashvili <youremail@example.com>},
+    VERSION_FROM        => 'lib/subs.pm',
+    ABSTRACT            => 'Simple sharing platform',
     ($eumm_version >= 6.3001
       ? ('LICENSE'=> 'perl')
       : ()),
@@ -22,5 +22,5 @@ WriteMakefile(
         'Dancer'     => 1.3121,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'upload-*' },
+    clean               => { FILES => 'upload-*','public/pub/-*' },
 );

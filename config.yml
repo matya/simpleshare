@@ -12,6 +12,8 @@ layout: "main"
 basedir: '.'
 upload_basedir: 'upload'
 share_basedir: 'pub'
+#man String::Random
+random_pattern: 'nCncCCCncncn'
 
 # when the charset is set to UTF-8 Dancer will handle for you
 # all the magic of encoding and decoding. You should not care

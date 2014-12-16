@@ -6,6 +6,8 @@ use Sort::Naturally;
 use File::Spec;
 use Encode qw(decode encode);
 
+my $version='0.39';
+
 our $upload_dir = setting('basedir') .'/'.setting('upload_basedir');
 our $share_dir = setting('basedir') .'/public/'.setting('share_basedir');
 
@@ -54,7 +56,8 @@ sub createuser {
 sub share {
     my ($fileref,$user) = @_;
     my $rndstring = String::Random->new;
-    my $rstr = $rndstring->randpattern("CCccccnCccCCCccncncncnc");
+    my $pattern  = setting('random_pattern');
+    my $rstr = $rndstring->randpattern($pattern);
     my $url = setting('share_basedir').'/'.$rstr;
     if ( ref $fileref eq 'ARRAY' ) {
         foreach my $fkey (keys (@$fileref)) {

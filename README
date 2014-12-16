@@ -4,52 +4,82 @@ NAME
 DESCRIPTION
     Upload and share files via randomly generated url.
 
-    From time to time I need to share some data with my friends, 
-    having a place with lets'say basic authentication works fine
-    but than you should also share the credentials.
-    Having randomly generated part in url solves the problem for this case:
+    From time to time I need to share some private data.
+    Instead of sharing username and password for a web share it is easier to
+    upload files to a share containing a random part.
+    In this case:
      - you do not need to share any passwords
      - the data is secure, as it is hard to guess the random part
 
-    Surely such a simple task doesn't need much coding and can be implemented purely in perl and cgi for example.
-    But using framework as Dancer with it's plugins has many advantages: 
-     - Dancer::Plugin::Auth::Extensible - provides flexible authentication backedns (files,databases,ldap..)
-     - Dancer::Session::Cookie - Encrypted cookie-based session backend for Dancer, 
+    Surely such a simple task doesn't need much coding and can be implemented 
+    purely in perl and cgi for example.
+    However using Dancer with its plugins has many advantages: 
+     - Dancer::Plugin::Auth::Extensible - provides flexible authentication 
+       backends (files,databases,ldap..),
+     - Dancer::Session::Cookie - Encrypted cookie-based sessions,
      - Template::Toolkit - Template Processing System,
      - The application is much more extendable and readable, 
-     - Coding with Dancer is just pure fun!
+     - Coding with Dancer is just fun!
 
-    The code does the following:
-     Uploads files in upload directory. If you need to share files, creates symlinks in public/pub/$random/$file which is publicly accessible.
-     You can manage shares and uploads - you can delete or unshare stuff.
-     This is sufficient for my needs, but there is still room for improvements :)
+    The application is simple:
+    Upload your files to the "upload" dir in the root of app.
+    The files cannot be accessed in this dir without authentication.
+    Share file or set of files via randomly generated share - in this case
+    a share is generated in public/pub/$randomshare containing symlinks to 
+    selected files in upload/$user/$files.
+    public/pub/ is publicly accessible location. 
+    You also can delete files and unshare shares, empty shares are deleted 
+    automatically.Symlinks to deleted files are removed as well.
+    This is sufficient for my needs, but there is still room for improvements :)
+    One also can setup a cronjob which will delete shares older than $maxage:
+        
+     find $approot/public/pub -maxdepth 1 -type d -mtime +$maxage -print
     
+    s/-print/-delete/ if you really want to delete!
 
 INSTALL
-    on a Debian Jessie:
+    on Debian Jessie:
+    
+    install at least the following modules:
 
-    apt-get install  libdancer-plugin-auth-extensible-perl libdancer-session-cookie-perl libsort-naturally-perl libstring-random-perl libtemplate-perl
+    libdancer-plugin-auth-extensible-perl libdancer-session-cookie-perl 
+    libsort-naturally-perl libstring-random-perl libtemplate-perl
 
     on other systems: install perl modules mentioned above.
 
 CONFIGURATION
-    Create directories: upload and public/pub -  mkdir {upload,public/pub}
-    Set the proper basedir path in config.yamli.
+    Create directories: upload and public/pub:
+
+    mkdir {upload,public/pub}
+
+    Set the proper basedir path in config.yaml.
     The default should work if the application is launched from the root directory
     
-    setup Auth::Extensible, by default config provider is used, but one can use whatever DPAE supports
-    default credentials: user test pass beer, user test2 pass beer. Roles are not used so far.
+    setup Dancer::Plugin::Auth::Extensible, by default config provider is used, 
+    but one can use whatever DPAE support.
+    The default credentials: user test, pass beer, user test2, pass beer.
+    Roles are not used so far.
 
 USAGE 
-    cd to the root of application and start it: ./bin/app.pl, open a browser and navigate to http://localhost:3000
+    cd to the root of the application and start it: 
+    
+    ./bin/app.pl 
+
+    open a browser and navigate to http://localhost:3000
+
     alternatively install Plack:
+
         apt-get install libplack-perl
-    and run it using plackup:
-        plackup bin/app.pl, navigate to http://localhost:5000
+
+    and start the app using plackup:
+
+        plackup bin/app.pl
+
+    navigate to http://localhost:5000
 
 LICENSE
     public/css/style.css, public/img/arrow.png, public/img/bg.png,
-    public/img/preview.png
+    public/img/preview.png:
     Copyright (c) 2012-2014 Thibaut Courouble
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -70,8 +100,13 @@ LICENSE
     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-    The rest: 
-    Copyright: 2014 Alex Mestiashvili
+    public/javascripts/jquery.js
+    Copyright 2011, John Resig
+    Dual licensed under the MIT or GPL Version 2 licenses.
+    http://jquery.org/license
+
+    *
+    Copyright: 2014 Alex Mestiashvili,
     
     
     This program is free software; you can redistribute it and/or modify it
