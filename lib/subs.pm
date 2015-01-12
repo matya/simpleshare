@@ -6,7 +6,7 @@ use Sort::Naturally;
 use File::Spec;
 use Encode qw(decode encode);
 
-my $version='0.39';
+my  $VERSION  = '1.40'; 
 
 our $upload_dir = setting('basedir') .'/'.setting('upload_basedir');
 our $share_dir = setting('basedir') .'/public/'.setting('share_basedir');

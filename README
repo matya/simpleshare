@@ -19,18 +19,18 @@ DESCRIPTION
      - Dancer::Session::Cookie - Encrypted cookie-based sessions,
      - Template::Toolkit - Template Processing System,
      - The application is much more extendable and readable, 
-     - Coding with Dancer is just fun!
+     - Coding with Dancer is fun!
 
     The application is simple:
     Upload your files to the "upload" dir in the root of app.
-    The files cannot be accessed in this dir without authentication.
+    The files cannot be accessed in this dir without authentication. 
     Share file or set of files via randomly generated share - in this case
     a share is generated in public/pub/$randomshare containing symlinks to 
-    selected files in upload/$user/$files.
+    selected files in upload/$user/$files. 
     public/pub/ is publicly accessible location. 
     You also can delete files and unshare shares, empty shares are deleted 
-    automatically.Symlinks to deleted files are removed as well.
-    This is sufficient for my needs, but there is still room for improvements :)
+    automatically. Symlinks to deleted files are removed as well.
+    This is sufficient for my needs, but there is still a room for improvements :)
     One also can setup a cronjob which will delete shares older than $maxage:
         
      find $approot/public/pub -maxdepth 1 -type d -mtime +$maxage -print
@@ -50,13 +50,14 @@ INSTALL
 CONFIGURATION
     Create directories: upload and public/pub:
 
+    cd $approot/
     mkdir {upload,public/pub}
 
     Set the proper basedir path in config.yaml.
     The default should work if the application is launched from the root directory
     
     setup Dancer::Plugin::Auth::Extensible, by default config provider is used, 
-    but one can use whatever DPAE support.
+    but one can use whatever DPAE supports.
     The default credentials: user test, pass beer, user test2, pass beer.
     Roles are not used so far.
 

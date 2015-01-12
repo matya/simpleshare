@@ -19,12 +19,8 @@ get qr{/login} => sub {
 
 post qr{/login} => sub {
 
-my ($success, $realm) = authenticate_user(
-        params->{username}, params->{password}
-    );
-    if ($success) {
+    if (authenticate_user( params->{username}, params->{password} )) {
         session logged_in_user => params->{username};
-        session logged_in_user_realm => $realm;
         my $user = session('logged_in_user');
         #implement a check and print a message if failed
         my $result = subs::createuser($user);
