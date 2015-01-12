@@ -53,6 +53,4 @@ plugins:
          - 'admin'
       - user: test2 
         pass: beer
-        roles:
-         - 'admin'
 

@@ -22,7 +22,7 @@ sub ls {
     my ($path) = @_;
     my @utf8files;
     opendir(my $u_fd,$path) or die "can\'t open $path, $!\n";
-    my @list_of_files = grep { !/^\./ } readdir( $u_fd );
+    my @list_of_files = grep { !/^\.{1,2}$/ } readdir( $u_fd );
     close $u_fd;
     if (@list_of_files) {
         foreach my $file (@list_of_files) {
@@ -39,7 +39,6 @@ sub ls {
 
 sub createuser {
     my ($user) = @_;
-	my $pwd = `pwd`;
     if  ($user =~ /[\w\d]*/) {
         my $path = $upload_dir.'/'.$user;
         my $sharepath = $share_dir.'/'.$user;
@@ -56,8 +55,7 @@ sub createuser {
 sub share {
     my ($fileref,$user) = @_;
     my $rndstring = String::Random->new;
-    my $pattern  = setting('random_pattern');
-    my $rstr = $rndstring->randpattern($pattern);
+    my $rstr = $rndstring->randpattern(setting('random_pattern'));
     my $url = setting('share_basedir').'/'.$rstr;
     if ( ref $fileref eq 'ARRAY' ) {
         foreach my $fkey (keys (@$fileref)) {
@@ -74,10 +72,11 @@ sub share {
 
 sub mklink {
     my ($file,$rnd,$user) = @_;
+    my $upload = setting('upload_basedir');
     my $path = $share_dir . '/' . $rnd;
     mkdir $path || debug "err $!\n";
     my $link = $path.'/'.$file;
-    my $dest = '../../../upload'.'/'.$user.'/'.$file;
+    my $dest = '../../../'.$upload.'/'.$user.'/'.$file;
     my $returnvalue =  symlink ($dest,$link) || return false;
     return true;
 }
@@ -127,12 +126,12 @@ sub list_shares {
     my @empty;
     my @usershares = ();
     opendir ( my $dh,$path) or die "shared::list_shares can\'t open dir $path, $!\n";
-    my @shares  = grep { !/^(\.)+$/ } readdir ( $dh );
+    my @shares  = grep { !/^\.{1,2}$/ } readdir ( $dh );
     close $dh;
     foreach my $share (@shares) {
         my $share_path = $path.'/'.$share;
         opendir (my $dh,$share_path) or die "shared::list_shares2 can\'t open die $share_path, $!\n";
-        my @content = grep { !/^(\.)+$/ } readdir ( $dh );
+        my @content = grep { !/^\.{1,2}$/ } readdir ( $dh );
         close $dh;
         if (! $content[0] ) {
             push @empty,$share;
