@@ -5,22 +5,11 @@ use Dancer ':syntax';
 
 our $share_basedir = setting('share_basedir');
 
-post '/shared' => sub {
-    my $user = session('logged_in_user');
-    my $sharedir = $share_basedir.'/'.$user;
-    my $req = request->params();
-    template 'shared' => {
-        shares => subs::list_shares($user),
-        sharedir => $sharedir,
-    };
+any ['get', 'post'] => '/shared' => sub {
 
-};
- 
-get '/shared' => sub {
     my $user = session('logged_in_user');
     # pub/$user
     my $sharedir = $share_basedir.'/'.$user;
-    my $req = request->params();
     # do not cache the result
     header('Cache-Control' =>  'no-store, no-cache, must-revalidate');
     template 'shared' => {
@@ -29,7 +18,7 @@ get '/shared' => sub {
     };
 };
 
-any qr{/shared/([\d\w]+$)} => sub {
+any ['get', 'post'] => qr{/shared/([\d\w]+$)} => sub {
     my $user = session('logged_in_user');
     my ($var) = splat;
     my $req = request->params();
