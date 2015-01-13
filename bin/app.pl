@@ -27,7 +27,7 @@ hook before_template => sub {
 any '/logout' => sub {
     session 'logged_in' => 0;
     session -> destroy;
-    return redirect '/login';
+    return redirect '/';
 };
 
 dance;
