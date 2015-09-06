@@ -15,7 +15,7 @@ DESCRIPTION
 
     The code does the following:
      Uploads files in the upload directory. If you need to share files, creates symlinks in 
-     ```public/pub/$random/$file``` which you can share.
+     $approot/public/pub/$random/$file which you can share.
      The interface lets you manage shares and uploads - you can delete or unshare stuff.
      There is still a room for improvements :)
     
