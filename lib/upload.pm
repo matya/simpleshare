@@ -3,6 +3,7 @@ use Dancer ':syntax';
 use Data::Dumper;
 use Sort::Naturally;
 use Encode qw(decode encode);
+use utf8;
 
 post '/upload' => sub {
     my $user = session('logged_in_user');
@@ -77,6 +78,5 @@ get '/download/:file' => sub {
     return send_file($path, system_path => 1 ) if -e $path;
     return redirect '/';
 };
-
 
 true;

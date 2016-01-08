@@ -18,17 +18,12 @@ get qr{/login} => sub {
 };
 
 post qr{/login} => sub {
-
-    my ($success, $realm) = authenticate_user(
-        params->{username}, params->{password}
-    );
-    if ($success) {
+    if (authenticate_user(params->{username}, params->{password})) {
         session logged_in_user => params->{username};
-        session logged_in_user_realm => $realm;
         my $user = session('logged_in_user');
-        my $result = subs::createuser($user);
-        return redirect '/logout' if ! $result;
-        redirect params->{return_url} || '/upload'; 
+        debug "USER = $user\n";
+        subs::createuser($user);
+        redirect params->{return_url} || "/upload";
     }
     else {  
         return redirect "/";

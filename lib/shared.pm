@@ -2,7 +2,6 @@ package shared;
 use Data::Dumper;
 use Dancer ':syntax';
 
-
 our $share_basedir = setting('share_basedir');
 
 post '/shared' => sub {
@@ -85,5 +84,3 @@ get qr{/getfile/([\d\w]+$)} => sub {
     }
 
 };
-
-
