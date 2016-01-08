@@ -56,7 +56,6 @@ sub share {
     my ($fileref,$user) = @_;
     my $rndstring = String::Random->new;
     my $rstr = $rndstring->randpattern(setting('random_pattern'));
-    my $url = setting('share_basedir').'/'.$rstr;
     if ( ref $fileref eq 'ARRAY' ) {
         foreach my $fkey (keys (@$fileref)) {
             my $file = @$fileref[$fkey];
