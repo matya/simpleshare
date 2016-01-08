@@ -15,7 +15,7 @@ post '/shared' => sub {
     };
 
 };
- 
+
 get '/shared' => sub {
     my $user = session('logged_in_user');
     # pub/$user
@@ -39,7 +39,7 @@ any qr{/shared/([\d\w]+$)} => sub {
         if ($req->{'filelist'} ) {
             my $links = $req->{'filelist'};
             my $left = subs::unshare($links,$var);
-            
+
             if ( ref $left eq 'ARRAY' ) {
                 return redirect "/shared/$var";
             } 
@@ -48,13 +48,13 @@ any qr{/shared/([\d\w]+$)} => sub {
                 return redirect '/shared';
             }
         }
-    else {
-           template 'share_x' => {
-               dir => $var,
-               files => subs::ls($path),
-               sharedir => $sharedir,
-           };
-       }
+        else {
+            template 'share_x' => {
+                dir => $var,
+                files => subs::ls($path),
+                sharedir => $sharedir,
+            };
+        }
     }
 
     if ( ! -d $path ) {
@@ -77,11 +77,11 @@ get qr{/getfile/([\d\w]+$)} => sub {
     my $path = $subs::share_dir.'/'.$share;
     if ( -d $path ) {
         my $files = subs::ls($path);
-            template 'index' => {
-                files => $files,
-                share => $share,
-            },
-            { layout => 0 };
+        template 'index' => {
+            files => $files,
+            share => $share,
+        },
+        { layout => 0 };
     }
 
 };

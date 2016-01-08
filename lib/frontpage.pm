@@ -19,7 +19,7 @@ get qr{/login} => sub {
 
 post qr{/login} => sub {
 
-my ($success, $realm) = authenticate_user(
+    my ($success, $realm) = authenticate_user(
         params->{username}, params->{password}
     );
     if ($success) {

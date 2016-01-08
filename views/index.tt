@@ -4,7 +4,7 @@
             <table class=upload_t>
             <tr>
             <% FOREACH file IN files %>
-                 <td><a href="<% public_url %>/<% share %>/<% dir %>/<% file %>"> <% file %> </a></td>
+                 <td><a href="<% public_url %>/<% share %>/<% file %>"> <% file %> </a></td>
                  </tr>
             <% END %>
 

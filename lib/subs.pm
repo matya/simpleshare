@@ -5,6 +5,7 @@ use Data::Dumper;
 use Sort::Naturally;
 use File::Spec;
 use Encode qw(decode encode);
+use utf8;
 
 our $upload_dir = setting('basedir') .'/'.setting('upload_basedir');
 our $share_dir = setting('basedir') .'/public/'.setting('share_basedir');
@@ -37,7 +38,7 @@ sub ls {
 
 sub createuser {
     my ($user) = @_;
-	my $pwd = `pwd`;
+    my $pwd = `pwd`;
     if  ($user =~ /[\w\d]*/) {
         my $path = $upload_dir.'/'.$user;
         my $sharepath = $share_dir.'/'.$user;
@@ -145,10 +146,10 @@ sub list_shares {
             # we need the dir name before the file
             my $linktouser = (File::Spec->splitdir( $link))[-2];
             push @usershares,$share  if ($linktouser eq $user);
-            
-       }
+
+        }
     }
-         
+
     foreach my $share (@empty) {
         my $full_path=$path.'/'.$share;
         rmdir $full_path;
@@ -164,16 +165,16 @@ sub clean_links {
     foreach my $share (@$shareref) {
         my $path = $share_dir.'/'.$share;
         my $files = ls($path);
-            foreach my $file (@$files) {
-                my $link = $path.'/'.$file;
-                my $linkdest = readlink($link);
+        foreach my $file (@$files) {
+            my $link = $path.'/'.$file;
+            my $linkdest = readlink($link);
 #                debug "subs::clean_shares::deadlink $link\n" if (! -e $linkdest);
-                unlink $link if (! -e $linkdest);
-            }
+            unlink $link if (! -e $linkdest);
+        }
     }
 }
-                
-    
+
+
 #upload files
 sub process_request {
     my ($ref,$user) = @_;

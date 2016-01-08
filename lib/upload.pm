@@ -59,7 +59,7 @@ post '/upload' => sub {
             }
         }
     }
-    
+
 };
 
 get '/upload' => sub {
