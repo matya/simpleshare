@@ -4,6 +4,7 @@ use String::Random;
 use Data::Dumper;
 use Sort::Naturally;
 use File::Spec;
+use POSIX 'strftime';
 use Encode qw(decode encode);
 use utf8;
 
@@ -124,13 +125,18 @@ sub list_shares {
     my $path = $share_dir;
     my @empty;
     my @usershares = ();
-    opendir ( my $dh,$path) or die "shared::list_shares can\'t open dir $path, $!\n";
+    my %sharehash;
+    opendir ( my $dh,$path ) or die "shared::list_shares can\'t open dir $path, $!\n";
     my @shares  = grep { !/^(\.)+$/ } readdir ( $dh );
     close $dh;
     foreach my $share (@shares) {
         my $share_path = $path.'/'.$share;
         opendir (my $dh,$share_path) or die "shared::list_shares2 can\'t open die $share_path, $!\n";
         my @content = grep { !/^(\.)+$/ } readdir ( $dh );
+        my $modtime_s = (stat($dh))[9];
+        #my $modtime = strftime "%Y/%m/%d %H:%M:%S", localtime((stat($dh))[9]);
+        my $modtime = strftime "%Y/%m/%d %H:%M:%S", localtime($modtime_s);
+        debug "MODTIME = $modtime $share";
         close $dh;
         if (! $content[0] ) {
             push @empty,$share;
@@ -144,8 +150,10 @@ sub list_shares {
             # link = '../../../upload/test/Doom2.wad'
             my $link =  readlink($file_path);
             # we need the dir name before the file
-            my $linktouser = (File::Spec->splitdir( $link))[-2];
-            push @usershares,$share  if ($linktouser eq $user);
+            my $linktouser = (File::Spec->splitdir($link))[-2];
+#            $sharehash{$share} = "$modtime_s" if ( $linktouser eq $user );
+            $sharehash{$modtime_s} = "$share" if ( $linktouser eq $user );
+#            push @usershares,$share  if ($linktouser eq $user);
 
         }
     }
@@ -154,7 +162,8 @@ sub list_shares {
         my $full_path=$path.'/'.$share;
         rmdir $full_path;
     }
-    return \@usershares;
+    return \%sharehash;
+#    return \@usershares;
 
 }
 
@@ -162,8 +171,9 @@ sub list_shares {
 sub clean_links {
     my ($user) = @_;
     my $shareref = list_shares($user);
-    foreach my $share (@$shareref) {
+    foreach my $share (keys (%$shareref)) {
         my $path = $share_dir.'/'.$share;
+        debug "CLEANING the LINK $path";
         my $files = ls($path);
         foreach my $file (@$files) {
             my $link = $path.'/'.$file;

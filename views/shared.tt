@@ -24,13 +24,15 @@ $(document).ready(function() {
             <br>
             <table class=upload_t>
             <tr>
+            <td> time</td>
             <td> share</td>
             <td> index</td>
             </tr><tr>
-            <% FOREACH share IN shares.sort %>
-
-                 <td> <a href="<% shared_url %>/<% share %>"> <% share %> </a></td>
-                 <td> <a href="<% getfile %>/<% share %>"> <% getfile %>/<% share %> </a></td>
+            <% USE date %>
+            <% FOREACH timestamp IN shares.keys.nsort.reverse %>
+                 <td> <% date.format(timestamp,format = '%Y/%m/%d %H:%M:%S') %></td>
+                 <td> <a href="<% shared_url %>/<% shares.$timestamp %>"> <% shares.$timestamp %> </a></td>
+                 <td> <a href="<% getfile %>/<% shares.$timestamp %>"> <% getfile %>/<% shares.$timestamp %> </a></td>
 <!--                <td><input type="checkbox" id="selecctall"/> Select All</td>
                     <% FOREACH file IN files.$dir %>
                         <tr>
