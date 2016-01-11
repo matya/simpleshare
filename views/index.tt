@@ -3,8 +3,8 @@
         <div id="filelist">
             <table class=upload_t>
             <tr>
-            <% FOREACH file IN files %>
-                 <td><a href="<% public_url %>/<% share %>/<% file %>"> <% file %> </a></td>
+            <% FOREACH timestamp IN files.keys.sort.reverse %>
+                 <td><a href="<% public_url %>/<% share %>/<% files.$timestamp %>"> <% files.$timestamp %> </a></td>
                  </tr>
             <% END %>
 

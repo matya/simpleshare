@@ -20,17 +20,23 @@ sub listfiles {
 
 sub ls {
     my ($path) = @_;
-    my @utf8files;
+    #my @utf8files;
+    my %filehash;
     opendir(my $u_fd,$path) or die "can\'t open $path, $!\n";
     my @list_of_files = grep { !/^\./ } readdir( $u_fd );
+    my $size  = scalar(@list_of_files);
     close $u_fd;
-    if (@list_of_files) {
+    if (scalar (@list_of_files)) {
         foreach my $file (@list_of_files) {
+            my $modtime_f = (stat("${path}/${file}"))[9];
+            debug "MODTIME FILE  = $modtime_f $file";
             my $utf8file = Encode::decode('UTF-8',$file);
-            push @utf8files,$utf8file;
+            #push @utf8files,$utf8file;
+            $filehash{"${modtime_f}_${utf8file}"} = $utf8file;
         }
-        @utf8files = nsort(@utf8files);
-        return \@utf8files;
+        #@utf8files = nsort(@utf8files);
+        #return \@utf8files;
+        return \%filehash;
     }
     else {
         return undef;
@@ -124,7 +130,7 @@ sub list_shares {
     my ($user) = @_;
     my $path = $share_dir;
     my @empty;
-    my @usershares = ();
+    #my @usershares = ();
     my %sharehash;
     opendir ( my $dh,$path ) or die "shared::list_shares can\'t open dir $path, $!\n";
     my @shares  = grep { !/^(\.)+$/ } readdir ( $dh );
@@ -135,8 +141,7 @@ sub list_shares {
         my @content = grep { !/^(\.)+$/ } readdir ( $dh );
         my $modtime_s = (stat($dh))[9];
         #my $modtime = strftime "%Y/%m/%d %H:%M:%S", localtime((stat($dh))[9]);
-        my $modtime = strftime "%Y/%m/%d %H:%M:%S", localtime($modtime_s);
-        debug "MODTIME = $modtime $share";
+        #my $modtime = strftime "%Y/%m/%d %H:%M:%S", localtime($modtime_s);
         close $dh;
         if (! $content[0] ) {
             push @empty,$share;
@@ -152,7 +157,7 @@ sub list_shares {
             # we need the dir name before the file
             my $linktouser = (File::Spec->splitdir($link))[-2];
 #            $sharehash{$share} = "$modtime_s" if ( $linktouser eq $user );
-            $sharehash{$modtime_s} = "$share" if ( $linktouser eq $user );
+            $sharehash{"${modtime_s}_${share}"} = "$share" if ( $linktouser eq $user );
 #            push @usershares,$share  if ($linktouser eq $user);
 
         }
@@ -171,11 +176,11 @@ sub list_shares {
 sub clean_links {
     my ($user) = @_;
     my $shareref = list_shares($user);
-    foreach my $share (keys (%$shareref)) {
+    foreach my $share (values (%$shareref)) {
         my $path = $share_dir.'/'.$share;
         debug "CLEANING the LINK $path";
         my $files = ls($path);
-        foreach my $file (@$files) {
+        foreach my $file (values (%$files)) {
             my $link = $path.'/'.$file;
             my $linkdest = readlink($link);
 #                debug "subs::clean_shares::deadlink $link\n" if (! -e $linkdest);

@@ -25,11 +25,11 @@ $(document).ready(function() {
             <tr>
             <td><% getfile %>/<% dir %></td>
             <td><input type="checkbox" id="selecctall"/> Selecct All</td>
-            <% FOREACH file IN files %>
+            <% FOREACH timestamp IN files.keys.sort.reverse %>
                 <tr>
-                 <td><a href="<% public_url %>/<% dir %>/<% file %>"> <% file %> </a></td>
-                 <td><% public_url %>/<% dir %>/<% file %></td>
-                 <td><input class="checkbox4share" type="checkbox" name="filelist" value="<% file %>"></td><tr>
+                 <td><a href="<% public_url %>/<% dir %>/<% files.$timestamp %>"> <% files.$timestamp %> </a></td>
+                 <td><% public_url %>/<% dir %>/<% files.$timestamp %></td>
+                 <td><input class="checkbox4share" type="checkbox" name="filelist" value="<% files.$timestamp %>"></td><tr>
                  </tr>
             <% END %>
 
