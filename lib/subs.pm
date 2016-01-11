@@ -29,7 +29,7 @@ sub ls {
     close $u_fd;
     if (scalar (@list_of_files)) {
         foreach my $file (@list_of_files) {
-            my $modtime_f = (stat("${path}/${file}"))[9];
+            my $modtime_f = (stat("${path}/${file}"))[9] if $file;
             my $utf8file = Encode::decode('UTF-8',$file);
             #push @utf8files,$utf8file;
             $filehash{"${modtime_f}_${utf8file}"} = $utf8file;
