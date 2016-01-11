@@ -14,12 +14,21 @@ get qr{/login} => sub {
 };
 
 post qr{/login} => sub {
+<<<<<<< HEAD
     if (authenticate_user( params->{username}, params->{password} )) {
         session logged_in_user => params->{username};
         my $user = session('logged_in_user');
         my $inituser= subs::createuser($user);
         return redirect '/logout' if ! $inituser;
         redirect '/upload';
+=======
+    if (authenticate_user(params->{username}, params->{password})) {
+        session logged_in_user => params->{username};
+        my $user = session('logged_in_user');
+        debug "USER = $user\n";
+        subs::createuser($user);
+        redirect params->{return_url} || "/upload";
+>>>>>>> devel
     }
     else {  
         return redirect "/logout";

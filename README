@@ -4,33 +4,60 @@ NAME
 DESCRIPTION
     Upload and share files via randomly generated url.
 
+<<<<<<< HEAD
     Surely such a simple task doesn't need much coding and can be implemented 
     purely in perl and cgi for example.
     However using Dancer with its plugins has many advantages: 
      - Dancer::Plugin::Auth::Extensible - provides flexible authentication backends (files,databases,ldap..),
      - Dancer::Session::Cookie - Encrypted cookie-based sessions,
+=======
+    Surely such a simple task doesn't need much coding and can be implemented purely in perl and cgi for example.
+    But using a framework such as Dancer with its plugins has many advantages: 
+     - Dancer::Plugin::Auth::Extensible - provides flexible authentication backedns (files,databases,ldap..),
+     - Dancer::Session::Cookie - Encrypted cookie-based session backend for Dancer, 
+>>>>>>> devel
      - Template::Toolkit - Template Processing System,
      - The application is much more extendable and readable, 
      - Coding with Dancer is fun!
 
     The code does the following:
      Uploads files in the upload directory. If you need to share files, creates symlinks in 
+<<<<<<< HEAD
      $approot/public/pub/$random/$file which you can share.
+=======
+     ```public/pub/$random/$file``` which you can share.
+>>>>>>> devel
      The interface lets you manage shares and uploads - you can delete or unshare stuff.
      There is still a room for improvements :)
     
 INSTALL
+<<<<<<< HEAD
     on Debian Jessie:
     
     install at least the following modules:
 
     libdancer-plugin-auth-extensible-perl libdancer-session-cookie-perl 
     libsort-naturally-perl libstring-random-perl libtemplate-perl
+=======
+    On a Debian Jessie:
 
-    on other systems: install perl modules mentioned above.
+    ```apt-get install  libdancer-plugin-auth-extensible-perl libdancer-session-cookie-perl \
+    libsort-naturally-perl libstring-random-perl libtemplate-perl```
+>>>>>>> devel
+
+    On other systems: install perl modules mentioned above.
 
 CONFIGURATION
+<<<<<<< HEAD
     Create directories: upload and public/pub:
+=======
+    Create directories: upload and public/pub -  ```mkdir {upload,public/pub}```
+    Set the proper basedir path in config.yml.
+    The default should work if the application is launched from the application root directory.
+    
+    Setup Dancer::Plugin::Auth::Extensible. Default is the config provider, but one can use whatever DPAE supports.
+    Default credentials: user test, pass beer, user test2, pass beer. No Roles.
+>>>>>>> devel
 
     cd $approot/
     mkdir {upload,public/pub}
@@ -43,6 +70,7 @@ CONFIGURATION
     The default credentials: user test, pass beer, user test2, pass beer.
     
 USAGE 
+<<<<<<< HEAD
     cd to the root of the application and start it: 
     
     ./bin/app.pl 
@@ -60,6 +88,14 @@ USAGE
     navigate to http://localhost:5000
     
     or use plackup and starman or ... 
+=======
+    cd to the root of application and start it: ```./bin/app.pl```, open a browser and 
+    navigate to ```http://localhost:3000```
+    alternatively install Plack:
+        ```apt-get install libplack-perl```
+    and run it using plackup:
+        ```plackup bin/app.pl```, navigate to ```http://localhost:5000```
+>>>>>>> devel
 
 LICENSE
     public/css/style.css, public/img/arrow.png, public/img/bg.png,
@@ -84,6 +120,7 @@ LICENSE
     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+<<<<<<< HEAD
     public/javascripts/jquery.js
     Copyright 2011, John Resig
     Dual licensed under the MIT or GPL Version 2 licenses.
@@ -91,6 +128,10 @@ LICENSE
 
     *
     Copyright: 2014 Alex Mestiashvili,
+=======
+    The rest: 
+    Copyright: 2014 Alex Mestiashvili
+>>>>>>> devel
    
     This program is free software; you can redistribute it and/or modify it
     under the terms of either: the GNU General Public License as published
