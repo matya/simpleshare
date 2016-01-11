@@ -27,16 +27,19 @@ $(document).ready(function() {
 </div>
 <div id="page">
         <% IF files.size %>
+        <% USE date %>
         <div id="filelist">
             <form action="<% upload_url %>" method="post">
             <h2> Uploaded files: </h2>
             <br>
             <table class=upload_t>
             <tr>
+            <td> timestamp </td>
             <td>Select All</td><td><input type="checkbox" id="selecctall"/> </td></tr>
-            <% FOREACH file IN files.sort %>
-                 <td><a href="download/<% file %>"> <% file %> </a></td>
-                 <td><input class="checkbox4upload" type="checkbox" name="filelist" value="<% file %>"></td><tr>
+            <% FOREACH timestamp IN files.keys.sort.reverse %>
+                 <td> <% date.format(timestamp.remove('_.*$'),format = '%Y/%m/%d %H:%M:%S') %></td>
+                 <td><a href="download/<% files.$timestamp %>"> <% files.$timestamp %> </a></td>
+                 <td><input class="checkbox4upload" type="checkbox" name="filelist" value="<% files.$timestamp %>"></td><tr>
             <% END %>
             </table>
         <br>

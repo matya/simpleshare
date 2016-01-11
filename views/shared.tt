@@ -29,28 +29,15 @@ $(document).ready(function() {
             <td> index</td>
             </tr><tr>
             <% USE date %>
-            <% FOREACH timestamp IN shares.keys.nsort.reverse %>
-                 <td> <% date.format(timestamp,format = '%Y/%m/%d %H:%M:%S') %></td>
+            <% FOREACH timestamp IN shares.keys.sort.reverse %>
+                 <td> <% date.format(timestamp.remove('_.*$'),format = '%Y/%m/%d %H:%M:%S') %></td>
                  <td> <a href="<% shared_url %>/<% shares.$timestamp %>"> <% shares.$timestamp %> </a></td>
                  <td> <a href="<% getfile %>/<% shares.$timestamp %>"> <% getfile %>/<% shares.$timestamp %> </a></td>
-<!--                <td><input type="checkbox" id="selecctall"/> Select All</td>
-                    <% FOREACH file IN files.$dir %>
-                        <tr>
-                        <td><a href="<% sharedir %>/<% dir %>/<% file %>"> <% file %> </a></td>
-                        <td><input class="checkbox<% dir %>" type="checkbox" name="filelist" value="<% file %>"></td><tr>
-                        </tr>
-                    <% END %>
--->
             </tr>
             <% END %>
 
             </table>
         <br>
-<!--
-        <H2> Action </H2>
-        <br>
-        <input type="submit" name="action" value="unshare" id="unshare"> 
--->
         </form>
         <% ELSE %>
             <div id="filelist">
