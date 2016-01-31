@@ -79,6 +79,7 @@ sub share {
 
 sub mklink {
     my ($file,$rnd,$user) = @_;
+    my $upload = setting('upload_basedir');
     my $path = $share_dir . '/' . $rnd;
     mkdir $path || debug "err $!\n";
     my $link = $path.'/'.$file;
