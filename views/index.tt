@@ -4,6 +4,16 @@
             <table class=upload_t>
             <tr>
             <% FOREACH timestamp IN files.keys.sort.reverse %>
+                 <% IF files.$timestamp.match('.*.webm') %>
+                    </tr>
+                       <td> 
+                        <video src="<% public_url %>/<% share %>/<% files.$timestamp %>" controls="true" >
+                            <source type="video/webm" src="xmasvideo/M&P-Xmas.webm"></source>
+                        </video>
+                        </td>
+                       <tr>
+                 <% END %>
+                
                  <td><a href="<% public_url %>/<% share %>/<% files.$timestamp %>"> <% files.$timestamp %> </a></td>
                  </tr>
             <% END %>

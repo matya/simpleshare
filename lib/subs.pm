@@ -8,7 +8,7 @@ use POSIX 'strftime';
 use Encode qw(decode encode);
 use utf8;
 
-my  $VERSION  = '1.40'; 
+my  $VERSION  = '1.42'; 
 
 our $upload_dir = setting('basedir') .'/'.setting('upload_basedir');
 our $share_dir = setting('basedir') .'/public/'.setting('share_basedir');
@@ -29,8 +29,9 @@ sub ls {
     close $u_fd;
     if (scalar (@list_of_files)) {
         foreach my $file (@list_of_files) {
-            my $modtime_f = (stat("${path}/${file}"))[9] if $file;
             my $utf8file = Encode::decode('UTF-8',$file);
+            my $modtime_f = (stat("${path}/${utf8file}"))[9];
+            #debug "MODTIME FILE  = $modtime_f $file";
             #push @utf8files,$utf8file;
             $filehash{"${modtime_f}_${utf8file}"} = $utf8file;
         }
@@ -62,6 +63,7 @@ sub share {
     my ($fileref,$user) = @_;
     my $rndstring = String::Random->new;
     my $rstr = $rndstring->randpattern(setting('random_pattern'));
+    my $url = setting('share_basedir').'/'.$rstr;
     if ( ref $fileref eq 'ARRAY' ) {
         foreach my $fkey (keys (@$fileref)) {
             my $file = @$fileref[$fkey];
@@ -77,7 +79,6 @@ sub share {
 
 sub mklink {
     my ($file,$rnd,$user) = @_;
-    my $upload = setting('upload_basedir');
     my $path = $share_dir . '/' . $rnd;
     mkdir $path || debug "err $!\n";
     my $link = $path.'/'.$file;
@@ -156,7 +157,6 @@ sub list_shares {
             # we need the dir name before the file
             my $linktouser = (File::Spec->splitdir($link))[-2];
 #            $sharehash{$share} = "$modtime_s" if ( $linktouser eq $user );
-            # a timestamp will be uniq for upload of multiple files, making the key uniq, which is crap
             $sharehash{"${modtime_s}_${share}"} = "$share" if ( $linktouser eq $user );
 #            push @usershares,$share  if ($linktouser eq $user);
 
